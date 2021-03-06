@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>11776168580-l9evckha2hs8ut7stqlde7fos9umlh73.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.11776168580-l9evckha2hs8ut7stqlde7fos9umlh73</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDnc10PLbDiVtcM0EK7h--TXTDakLpk_P8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>11776168580</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.loyalfans.app</string>
+	<key>PROJECT_ID</key>
+	<string>loyalfans-f3a52</string>
+	<key>STORAGE_BUCKET</key>
+	<string>loyalfans-f3a52.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:11776168580:ios:a1ded0bc263430cf5768d1</string>
+</dict>
+</plist>
