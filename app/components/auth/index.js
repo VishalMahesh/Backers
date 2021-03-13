@@ -11,6 +11,7 @@ const AuthButtons = ({ action, signin }) => {
     var caption = `Sign ${signin ? "in" : "up"} with `
     return LoginButtons.map((item, index) => <SubmitButtons
         label={caption + item.label}
+        style={{ backgroundColor: signin ? Colors.light : Colors.lightbase }}
         action={() => action(index)}
         size={16}
         name={item.image}

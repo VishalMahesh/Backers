@@ -23,7 +23,7 @@ const Avatar = ({ size, source, style }) => <View style={[CommonStyles.center, {
     />
 </View>
 
-const CommentItem = ({ item, likeAction }) => {
+const CommentItem = ({ item, likeAction, index }) => {
     const [like, onLike] = useState(item.alreadyLiked)
     const [count, onCount] = useState(item.likeCount)
     return <View style={styles.container}>
@@ -52,6 +52,7 @@ const CommentItem = ({ item, likeAction }) => {
             <AppIcon
                 name={like ? Images.heartred : Images.heart}
                 size={14}
+                key={index}
             />
         </TouchableOpacity>
     </View>
@@ -70,7 +71,8 @@ const CommentInput = ({ noshadow, dark, ...props }) => {
     !noshadow && CommonStyles.shadow,
     CommonStyles.rounded,
     noshadow && { paddingTop: 0, borderBottomWidth: 0.5, borderColor: Colors.shade },
-    dark && { backgroundColor: Colors.dark }
+    dark && { backgroundColor: Colors.dark },
+    props.style
         // CommonStyles.row
     ]}>
         {props.children}
@@ -146,8 +148,9 @@ const CommentWrapper = React.forwardRef((props, ref) => {
                 scrollEventThrottle={16}
                 keyboardShouldPersistTaps={'always'}
             >
-                {comm.map((item) => <CommentItem
+                {comm.map((item, index) => <CommentItem
                     item={item}
+                    index={index}
                     likeAction={handleCommentLike}
                 />)}
                 {comm.length == 0 && <NoData />}

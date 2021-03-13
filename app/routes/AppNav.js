@@ -11,6 +11,7 @@ import ProfileStack from './ProfileStack';
 import ReelsStack from './ReelsStack';
 import NotificationStack from './NotificationStack';
 import AddPostStack from './AddPostStack';
+import ScheduleStack from './scheduleVideoStack';
 const S = StyleSheet.create({
     container: { flexDirection: "row", height: wide * 0.15, elevation: 2, backgroundColor: Colors.light, borderRadius: 30 },
     tabButton: { flex: 1, justifyContent: "center", alignItems: "center" },
@@ -81,7 +82,7 @@ function renderTabBarIcon(focused, iconSource, active, large) {
     return (
         <View style={CommonStyles.tabBarItemContainer}>
             <AppIcon
-                size={large ? 35 : 25}
+                size={large ? 40 : 25}
                 // color={focused ? Colors.dark : Colors.shade}
                 name={focused ? active : iconSource}
             />
@@ -96,7 +97,7 @@ const TabNavigator = createBottomTabNavigator(
         Home: HomeStack,
         Stories: ReelsStack,
         AddPost: AddPostStack,
-        //   Notification: NotificationStack,
+        ScheduleVideo: ScheduleStack,
         Profile: ProfileStack,
     },
     {
@@ -111,11 +112,11 @@ const TabNavigator = createBottomTabNavigator(
                         icon = renderTabBarIcon(focused, Images.play, Images.playfill);
                         break;
                     case 'AddPost':
-                        icon = renderTabBarIcon(focused, Images.plus, Images.plus);
+                        icon = renderTabBarIcon(focused, Images.plus, Images.plus, true);
                         break;
-                    // case 'Notification':
-                    //     icon = renderTabBarIcon(focused, Images.bell, Images.bellfill);
-                    //     break;
+                    case 'ScheduleVideo':
+                        icon = renderTabBarIcon(focused, Images.av, Images.avfill);
+                        break;
                     case 'Profile':
                         icon = renderTabBarIcon(focused, Images.profile, Images.profilefill);
                         break;

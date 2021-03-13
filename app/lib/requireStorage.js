@@ -5,7 +5,7 @@ import { Platform } from 'react-native';
 
 const RequireStorage = (WrappedComponent) => {
   return class WithStorageAcess extends Component {
-    state = { photos: null, videos: null };
+    state = { photos: null, videos: null, onlyPhotos: null };
     async componentDidMount() {
       await new Promise(resolve => setTimeout(resolve, 500));
       if (Platform.OS !== 'ios' ? await requestExternalStoreageRead() : true) {
@@ -31,6 +31,7 @@ const RequireStorage = (WrappedComponent) => {
             const arr = assets.map((asset) => asset.node);
             let videos = [];
             let photos = [];
+            let onlyPhotos = [];
             arr.forEach((item, index) => {
               let obj = {
                 uri: item.image.uri,
@@ -40,9 +41,12 @@ const RequireStorage = (WrappedComponent) => {
               if (item.type == filecheck) {
                 videos.push({ ...obj, id: index + 1 });
               }
+              else {
+                onlyPhotos.push({ ...obj, id: index + 1 })
+              }
             });
-            this.setState({ videos, photos });
-            res({ videos, photos });
+            this.setState({ videos, photos, onlyPhotos });
+            res({ videos, photos, onlyPhotos });
           })
           .catch(rej)
       );
@@ -51,6 +55,7 @@ const RequireStorage = (WrappedComponent) => {
       return (
         <WrappedComponent
           photos={this.state.photos}
+          pics={this.state.onlyPhotos}
           videos={this.state.videos}
           {...this.props}
         />

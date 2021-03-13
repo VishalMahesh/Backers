@@ -69,7 +69,6 @@ export function addFeed(feed, cb) {
     Object.keys(param).map((key) => {
         data.append(key, param[key]);
     });
-
     return (dispatch, getState) => {
         dispatch(createPostRequest())
         return axios.post(AppURLs.postcreate, data).then((res) => {
@@ -147,7 +146,7 @@ function likePostfailure() {
     };
 }
 
-export function likePosts(id, ind, isLiked) {
+export function likePosts(id, ind, isLiked, notHome) {
     let data = {
         postId: id
     }
@@ -156,13 +155,12 @@ export function likePosts(id, ind, isLiked) {
     return (dispatch, getState) => {
         dispatch(likePostRequest())
         return axios.post(url, data).then(res => {
-
             if (res.data.status) {
-                let arr = [...getState().entities.feed.homeFeeds]
-
-                arr[ind].alreadyLiked = isLiked ? false : true;
-                getState().entities.feed.homeFeeds = [...arr]
-
+                if (!notHome) {
+                    let arr = [...getState().entities.feed.homeFeeds]
+                    arr[ind].alreadyLiked = isLiked ? false : true;
+                    getState().entities.feed.homeFeeds = [...arr]
+                }
             }
             dispatch(likePostSuccess())
         })

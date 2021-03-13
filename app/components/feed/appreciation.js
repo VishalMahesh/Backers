@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, TouchableOpacity, Image, Text, KeyboardAvoidingView, FlatList } from 'react-native'
+import { View, TouchableOpacity, Image, Text, KeyboardAvoidingView, FlatList, Keyboard } from 'react-native'
 import { Colors, CommonStyles, containerPadding, wide } from '../../constants'
 import Images from '../../constants/Images'
 import { PostButton, SubmitButtons } from '../common/buttons'
@@ -33,7 +33,7 @@ const CaptionButton = [
     },
 ]
 
-const ModalBox = ({ mainLabel, icon, description, btnlabel, onSubmit, closeModal, ...props }) => <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }}>
+const ModalBox = ({ mainLabel, icon, description, btnlabel, onSubmit, closeModal, btncolor = Colors.base, ...props }) => <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }}>
     <CloseArea action={closeModal} />
     <View style={styles.light}>
         <Image
@@ -57,6 +57,7 @@ const ModalBox = ({ mainLabel, icon, description, btnlabel, onSubmit, closeModal
             dark
             label={btnlabel}
             bold
+            style={{ backgroundColor: btncolor }}
             action={onSubmit}
         />
     </View>
@@ -158,13 +159,34 @@ const Caption = ({ icon, icon1, icon2, value, color }) => <View style={[{ flex: 
 const Appreciation = ({ onClose }) => {
     const [active, onChange] = useState(0)
     const [count, onCount] = useState(1)
+    const [inputVal, onChangeInput] = useState("0")
+    const activePrice = () => {
+        if (active !== null) {
+            return `${CaptionButton[active].value * count}`
+        }
+        else {
+            return inputVal
+        }
+    }
+
+    const handleInput = (e) => {
+        if (e == "") {
+            onChangeInput("4")
+            onChange(0)
+        }
+        else {
+            onChangeInput(e)
+            onChange(null)
+        }
+    }
+
     return <ModalBox
         mainLabel={"Send appreciation"}
         onSubmit={onClose}
         closeModal={onClose}
         icon={Images.appreciation}
-        btnlabel={`Send appreciation for $${CaptionButton[active].value * count}`}
-        description={"Let the creator know that you love them & \n support them by buying them maybe \n a cookie or a coffee"}
+        btnlabel={`Send appreciation for $${activePrice()}`}
+        description={"To your lovable creators"}
     >
         <View style={[CommonStyles.row, { paddingVertical: containerPadding }]}>
             {CaptionButton.map((item, index) => {
@@ -184,7 +206,7 @@ const Appreciation = ({ onClose }) => {
                         />
                     </View>}
                     <TouchableOpacity
-                        onPress={() => onChange(index)}
+                        onPress={() => { onChange(index); onChangeInput("0"); Keyboard.dismiss() }}
                         activeOpacity={0.5}
                         style={[
                             styles.captionbtn,
@@ -211,38 +233,14 @@ const Appreciation = ({ onClose }) => {
                     </TouchableOpacity>
                 </>
             })}
-            {/* <DonateButton active={active == 1} show={show} count={count}>
-                <PostButton
-                    label={"$ 4"}
-                    icon={Images.cookie}
-                    active={active == 1}
-                    action={() => handleAction(1)}
-                />
-            </DonateButton>
-            <DonateButton active={active == 2} show={show} count={count}>
-                <PostButton
-                    label={"$ 6"}
-                    active={active == 2}
-                    icon={Images.coffee}
-                    action={() => handleAction(2)}
-                />
-            </DonateButton>
-            <DonateButton active={active == 3} show={show} count={count}>
-                <PostButton
-                    label={"$ 10"}
-                    icon={Images.cookie}
-                    style={{ width: wide * 0.36 }}
-                    active={active == 3}
-                    action={() => handleAction(3)}
-                    extras={[Images.add, Images.coffee]}
-                />
-            </DonateButton> */}
         </View>
         <OrSeperator />
         <View style={{ height: wide * 0.12, width: wide * 0.9, alignItems: 'center' }}>
             <FormInputs
                 type="comment"
                 style={{ height: 40 }}
+                onChangeText={handleInput}
+                onFocus={() => { onChange(null); onChangeInput("0") }}
                 appreciation
                 placeholder={"Donate a custom amount"}
             />

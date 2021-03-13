@@ -4,7 +4,7 @@ import {
     RECUR_SLOTS_UPDATE_FAILURE,
     GET_SCHEDULED_SLOTS_R,
     GET_SCHEDULED_SLOTS_S,
-    GET_SCHEDULED_SLOTS_F
+    GET_SCHEDULED_SLOTS_F,
 } from '../actions/action-type';
 
 import { Record } from 'immutable';

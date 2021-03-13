@@ -17,7 +17,6 @@ export default class ChatList extends Component {
                     label={"Messaging"}
                     primaryAction={() => Navigation.back()}
                     style={{ borderBottomWidth: 0 }}
-                    icon={Images.chatadd}
                 />
                 <CommentInput noshadow>
                     <FormInputs

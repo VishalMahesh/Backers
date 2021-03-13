@@ -64,8 +64,7 @@ class Details extends React.Component {
         let onScroll = Animated.event([
             { nativeEvent: { contentOffset: { y: this._scrollValue } } },
         ]);
-        const { index } = this.props.navigation.state.params
-        const { homeFeeds } = this.props.feed
+        const { post } = this.props.navigation.state.params
         return (
             <SafeAreaView style={[CommonStyles.container, CommonStyles.noPadding]}>
                 <AuthHeader
@@ -78,7 +77,7 @@ class Details extends React.Component {
                     scrollEnabled={!isDragging}
                     showsVerticalScrollIndicator={false}
                 >
-                    {[homeFeeds[index]].map(item => <FeedComponent
+                    {[post].map(item => <FeedComponent
                         data={item}
                         index={0}
                         shouldPlay={0}
@@ -117,7 +116,7 @@ class Details extends React.Component {
                     option={option}
                     closeOption={() => this.setState({ option: false })}
                     pay={pay}
-                    activePost={homeFeeds[index]._id}
+                    activePost={post._id}
                     home
                     action={() => { }}
                     closePay={() => this.setState({ pay: false })}

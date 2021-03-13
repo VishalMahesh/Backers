@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import autobind from 'class-autobind';
 import ReactNative, { View, Animated, PanResponder, Easing, Image, FlatList, Platform } from 'react-native';
-
+import Modal from 'react-native-modal'
 import getDistance from './helpers/getDistance';
 import getScale from './helpers/getScale';
 import measureNode from './helpers/measureNode';
@@ -22,17 +22,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import PaginationDot from 'react-native-animated-pagination-dot'
 import Video from 'react-native-video';
 import FastImage from 'react-native-fast-image'
-const getVideoSource = (source) => {
-  var videoUri = '';
-  if (Platform.OS == 'ios') {
-    const appleId = source.substring(5, 41);
-    const ext = 'MOV';
-    videoUri = `assets-library://asset/asset.${ext}?id=${appleId}&ext=${ext}`;
-  } else {
-    videoUri = source;
-  }
-  return videoUri
-}
+import Images from '../../../constants/Images';
+import { ModalBox } from '../../../components/feed/appreciation'
 
 const RESTORE_ANIMATION_DURATION = 200;
 
@@ -87,8 +78,8 @@ export default class PhotoComponent extends Component {
     getScrollPosition: PropTypes.func,
   };
 
-  constructor() {
-    super(...arguments);
+  constructor(props) {
+    super(props);
     autobind(this);
 
     this._generatePanHandlers();
@@ -97,7 +88,9 @@ export default class PhotoComponent extends Component {
     this.state = {
       locked: true,
       blur: BlurRadius,
-      activePage: 0
+      activePage: 0,
+      isPremium: props.data.premiumPost,
+      subs: false,
     }
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
     this.viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
@@ -110,7 +103,7 @@ export default class PhotoComponent extends Component {
 
   render() {
     let { data, index, suggest, payout, comment, share, more, onDetails, shouldPlay } = this.props;
-    const { locked, blur, activePage } = this.state;
+    const { locked, blur, activePage, isPremium } = this.state;
     return (
       <View ref={(parentNode) => (this._parent = parentNode)}>
         <>
@@ -133,15 +126,12 @@ export default class PhotoComponent extends Component {
                 onViewableItemsChanged={this.handleViewableItemsChanged}
                 viewabilityConfig={this.viewabilityConfig}
                 renderItem={({ item, index }) => <>
-                  {(data.premiumPost) ? <>
+                  {(isPremium) ? <>
                     <Image
                       source={{ uri: item.src }}
                       style={[{ height: wide, width: wide * 0.92 }, CommonStyles.rounded]}
                       resizeMode={"cover"}
-                      blurRadius={data.premiumPost ? blur : 0}
-                    />
-                    <UnlockInfo
-                      action={() => this.setState({ locked: false, blur: 0 })}
+                      blurRadius={isPremium ? blur : 0}
                     />
                   </>
                     :
@@ -171,7 +161,10 @@ export default class PhotoComponent extends Component {
                     </>}
                 </>}
               />
-
+              {isPremium && <UnlockInfo
+                action={() => this.setState({ subs: true })}
+                count={data.attachments.length}
+              />}
               <View key={index} style={[{ height: 40, marginLeft: 10, position: 'absolute', bottom: 0, left: 0, zIndex: 99 }, CommonStyles.center]}>
                 <PaginationDot
                   activeDotColor={Colors.light}
@@ -188,6 +181,7 @@ export default class PhotoComponent extends Component {
               share={share}
               comment={comment}
               index={index}
+              iscommentingavailable={data.commentingAvailable}
               likeCount={data.likeCount}
               isLike={data.alreadyLiked}
               commentCount={data.commentCount}
@@ -223,6 +217,23 @@ export default class PhotoComponent extends Component {
             </View>
           </>}
         </>
+        <Modal
+          style={{ padding: 0, margin: 0 }}
+          swipeDirection={'down'}
+          onSwipeComplete={() => this.setState({ subs: false })}
+          onBackButtonPress={() => this.setState({ subs: false })}
+          useNativeDriver={Platform.OS == 'ios' ? false : true}
+          isVisible={this.state.subs}>
+          <ModalBox
+            onSubmit={() => this.setState({ subs: false, locked: false, blur: 0, isPremium: false })}
+            closeModal={() => this.setState({ subs: false })}
+            mainLabel={"Successfully Subscribed"}
+            icon={Images.smilesuccess}
+            description={"You have successfully subscribed to view this post."}
+            btnlabel={"Okay"}
+            btncolor={Colors.green}
+          />
+        </Modal>
       </View>
     );
   }

@@ -19,6 +19,7 @@ export const AppURLs = {
   googlelogin: "googleLogin",
   createslot: "slots/createUpdate",
   slotfetch: "slots/fetch",
+  onceSlotFetch: "slots/fetchMyOriginalSlotsOnce",
   slotFetchRecur: "slots/fetchMyOriginalSlots?slotType=recurring",
   bookslot: "slotBookings/create",
   postcreate: "posts/create",
@@ -33,7 +34,16 @@ export const AppURLs = {
   likeComment: "likes/likeComment",
   unlikeComment: "likes/unlikeComment",
   fetchUserPosts: "posts/fetchPosts?userId=",
-  fetchUserReels: "posts/fetchReels?userId="
+  fetchUserReels: "posts/fetchReels?userId=",
+  searchUsers: "users/serchUserByUsername?userName=",
+  followUnfollow: "follows/followUnfollow",
+  updateSubscription: "subscriptions/update/",
+  fetchUserSubscription: "subscriptions/fetch?userId=",
+  fetchSubscriptionById: "subscriptions/fetch?id=",
+  fetchMySubscriptions: "subscriptions/fetchMySubscriptions",
+  updateProfile: "users/update",
+  myBookedSlots: "slotBookings/myBookedSlots",
+  checkUserNameAvailability: "CheckUserNameAvailability"
 };
 
 export const USER_AUTH = 'USER_AUTH';

@@ -51,6 +51,7 @@ class Gallery extends Component {
 
     handleImages = (item, index, select) => {
         const { selected } = this.state;
+        const { noMulti } = this.props
         let arr = [...selected]
         if (select) {
             arr.push(item)
@@ -62,6 +63,9 @@ class Gallery extends Component {
         this.setState({ selected: [...arr] })
         if (this.props.onlyVideo) {
             this.props.onComplete(arr)
+        }
+        if (noMulti) {
+            this.props.onComplete(arr[0])
         }
     }
 
@@ -80,16 +84,16 @@ class Gallery extends Component {
                 />
             </TouchableOpacity>
         ) : (
-                <ImageSelector
-                    item={item}
-                    handleAction={(type) => this.handleImages(item, index, type)}
-                    selected={item.selected}
-                />
-            );
+            <ImageSelector
+                item={item}
+                handleAction={(type) => this.handleImages(item, index, type)}
+                selected={item.selected}
+            />
+        );
     };
 
     render() {
-        const { photos, videos, onCancel, onlyVideo } = this.props;
+        const { photos, videos, onCancel, onlyVideo, onlyPhoto, pics, noMulti } = this.props;
         const { selected, data } = this.state;
 
         return (
@@ -102,7 +106,7 @@ class Gallery extends Component {
                     />
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        data={onlyVideo ? data.concat(videos) : data.concat(photos)}
+                        data={onlyVideo ? data.concat(videos) : (onlyPhoto) ? data.concat(pics) : data.concat(photos)}
                         keyExtractor={(item, index) => index.toString()}
                         numColumns={3}
                         contentContainerStyle={{ paddingHorizontal: containerPadding }}

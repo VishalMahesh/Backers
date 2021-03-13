@@ -60,6 +60,7 @@ export default Images = {
     block: require("../assets/icons/user_x.png"),
     call: require("../assets/icons/phone.png"),
     videoCall: require("../assets/icons/video.png"),
+    videocallfilled: require("../assets/icons/video-filled.png"),
     imageattach: require("../assets/icons/image_alt.png"),
     smile: require("../assets/icons/happy.png"),
     plusedit: require("../assets/icons/plus-edit.png"),
@@ -99,5 +100,8 @@ export default Images = {
     calx: require("../assets/icons/calendar_x.png"),
     caly: require("../assets/icons/calendary.png"),
     transfer: require("../assets/icons/transfer.png"),
-    editalt: require("../assets/icons/edit-alt.png")
+    editalt: require("../assets/icons/edit-alt.png"),
+    smilesuccess: require("../assets/images/smilesuccess.png"),
+    av: require("../assets/icons/av.png"),
+    avfill: require("../assets/icons/avfill.png"),
 }

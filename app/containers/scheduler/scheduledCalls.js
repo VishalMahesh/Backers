@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, FlatList, ScrollView } from 'react-native'
+import { Text, View, SafeAreaView, FlatList, ScrollView, LayoutAnimation, Platform, UIManager } from 'react-native'
 import { SubmitButtons } from '../../components/common/buttons'
 import { IconButtons } from '../../components/common/iconUtility'
 import { Label } from '../../components/common/label'
@@ -8,8 +8,27 @@ import Images from '../../constants/Images'
 import Navigation from '../../lib/Navigation'
 import { AuthHeader } from '../../utils/Headers/CustomHeader'
 import { OptionButton } from './influencer'
+import { CalendarComponent } from '../../components/scheduler/calendar'
+import { getMyBookedSlots } from '../../actions/slots'
+import { connect } from 'react-redux'
+import AppLoader from '../../utils/Apploader'
+class ScheduledCalls extends Component {
+    constructor() {
+        super();
+        this.state = { expanded: false }
+        if (Platform.OS === 'android') {
+            UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
+    }
+    changeLayout = () => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        this.setState({ expanded: !this.state.expanded });
+    }
 
-export default class ScheduledCalls extends Component {
+
+    componentDidMount() {
+        this.props.dispatch(getMyBookedSlots())
+    }
 
     renderInfo = ({ item, index }) => <View style={styles.container}>
         <View style={[CommonStyles.row, CommonStyles.btmborder, { padding: 10, justifyContent: "space-between" }]}>
@@ -66,6 +85,10 @@ export default class ScheduledCalls extends Component {
     </View>
 
     render() {
+        const { expanded } = this.state;
+        const { isFetching } = this.props.slotReducer
+        const { bookedSlots } = this.props.Data
+        console.log(bookedSlots);
         return (
             <SafeAreaView style={[CommonStyles.container, { padding: 0 }]}>
                 <AuthHeader
@@ -77,8 +100,16 @@ export default class ScheduledCalls extends Component {
                         <OptionButton
                             label={"These are your scheduled video calls sorted by newest first."}
                             nosep
+                            action={this.changeLayout}
                             icon={Images.calendartog}
                         />
+                        <View style={{ height: expanded ? null : 0, overflow: 'hidden' }}>
+                            <CalendarComponent
+                                changed={(e) => console.log(e)}
+                                onMonthChange={e => console.log(e)}
+                                data={[]}
+                            />
+                        </View>
                         <FlatList
                             data={Dummy.ScVideoCalls}
                             renderItem={this.renderInfo}
@@ -87,10 +118,24 @@ export default class ScheduledCalls extends Component {
                         <View style={{ height: 100 }} />
                     </View>
                 </ScrollView>
+                <AppLoader visible={isFetching} />
             </SafeAreaView>
         )
     }
 }
+
+
+function mapStateToProps(state) {
+    const { entities, slotReducer } = state;
+    return {
+        Data: entities.slot,
+        User: entities.user,
+        slotReducer
+    };
+}
+
+export default connect(mapStateToProps)(ScheduledCalls);
+
 
 const styles = {
     container: {

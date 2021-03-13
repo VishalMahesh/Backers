@@ -182,6 +182,27 @@ export function getSchedule(data, cb) {
     return (dispatch, getState) => {
         dispatch(getScheduleRequest());
         return axios
+            .get(`${AppURLs.onceSlotFetch}?startDate=${data.startDate}&endDate=${data.endDate}`)
+            .then((response) => {
+                if (response.data.status) {
+                    getState().entities.slot.userSlots = response.data.success.data
+                    cb(true, response.data.success.data)
+                }
+                return dispatch(getScheduleSuccess());
+            })
+            .catch((error) => {
+                console.log(error)
+                cb(false, [])
+                return dispatch(getScheduleFailure(error));
+            });
+    };
+}
+
+
+export function getOtherUserSchedule(data, cb) {
+    return (dispatch, getState) => {
+        dispatch(getScheduleRequest());
+        return axios
             .get(`${AppURLs.slotfetch}?userId=${data.userId}&startDate=${data.startDate}&endDate=${data.endDate}`)
             .then((response) => {
                 if (response.data.status) {
@@ -205,9 +226,9 @@ export function getUserRecurringSlots(cb) {
         return axios
             .get(`${AppURLs.slotFetchRecur}`)
             .then((response) => {
+                let prevarr = [...getInitialisedValues()]
                 if (response.data.status) {
                     let data = response.data.success.data;
-                    let prevarr = [...getInitialisedValues()]
                     if (data.length > 0) {
                         data.forEach((item, index) => {
                             let ObjInd = prevarr.findIndex((e) => e.title == item.day);
@@ -221,6 +242,9 @@ export function getUserRecurringSlots(cb) {
                         })
                     }
                     getState().entities.slot.recurSlots = [...prevarr]
+                    cb(true, [...prevarr])
+                }
+                else {
                     cb(true, [...prevarr])
                 }
                 return dispatch(getScheduleSuccess());
@@ -256,11 +280,13 @@ function getBookingFailure(message) {
 
 
 export function addBooking(data, cb) {
+    debugger
     return (dispatch, getState) => {
         dispatch(getBookingRequest());
         return axios
             .post(AppURLs.bookslot, data)
             .then((response) => {
+                debugger
                 if (response.data.status) {
                     dispatch(getBookingRequest());
                     cb(true, response.data.success.data)
@@ -273,4 +299,22 @@ export function addBooking(data, cb) {
                 return dispatch(getBookingFailure(error));
             });
     };
+}
+
+export function getMyBookedSlots() {
+    return (dispatch, getState) => {
+        return axios
+            .get(AppURLs.myBookedSlots)
+            .then((response) => {
+                if (response.data.status) {
+                    getState().entities.slot.bookedSlots = response.data.success.data
+                    dispatch(getBookingRequest());
+                }
+                return dispatch(getBookingSuccess());
+            })
+            .catch((error) => {
+                console.log(error);
+                return dispatch(getBookingFailure(error));
+            });
+    }
 }

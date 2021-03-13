@@ -32,31 +32,34 @@ const getMediaStatus = (index) => {
         return false
     }
 }
-
 const data = [
     {
         id: 0,
         title: "Turn off commenting",
         description: "Comments would be off for this post",
-        value: false
+        value: false,
+        apiKey: "commentingAvailable"
     },
     {
         id: 1,
         title: "Premium post",
         description: "Only your backers would be able to see this post.",
-        value: true
+        value: false,
+        apiKey: "premiumPost"
     },
     {
         id: 2,
         title: "Post this to Instagram",
         description: "peter.mckinnin",
-        value: false
+        value: false,
+        apiKey: "postedOnInsta"
     },
     {
         id: 3,
         title: "Post this to Facebook",
         description: "Peter McKinnin",
-        value: true
+        value: false,
+        apiKey: "postedOnFacebook"
     },
 ]
 
@@ -110,8 +113,8 @@ const MediaItem = ({ source, onDelete, onadd, isvideo, play, reel }) => <ImageBa
     </View>
 </ImageBackground>
 
-const PostOptions = ({ item, index }) => {
-    const [selected, onSelected] = useState(item.value)
+const PostOptions = ({ item, index, onchange }) => {
+
     return <View style={[CommonStyles.row, { height: wide * 0.17 }]}>
         <View style={{ flex: 1, maxWidth: wide * 0.75, marginRight: containerPadding }}>
             <Label
@@ -127,8 +130,8 @@ const PostOptions = ({ item, index }) => {
         </View>
         <IconButtons
             size={50}
-            name={selected ? Images.on : Images.off}
-            action={() => onSelected(!selected)}
+            name={item.value ? Images.on : Images.off}
+            action={onchange}
         />
     </View>
 }
@@ -166,7 +169,8 @@ class NewPost extends Component {
             vidsrc: null,
             mode: props.navigation.state.params.mode,
             caption: "",
-            activePost: 0
+            activePost: 0,
+            postActions: [...data]
         }
         this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
         this.viewabilityConfig = { itemVisiblePercentThreshold: 50 }
@@ -217,7 +221,9 @@ class NewPost extends Component {
     }
 
     submitPost = () => {
-        const { mode, media, caption } = this.state;
+        const { mode, media, caption, postActions } = this.state;
+        let arr = [...postActions]
+        var act = arr.reduce((obj, item) => Object.assign(obj, { [item.apiKey]: item.value }), {});
         this.setState({ loading: true })
         if (mode == 2) {
             var videoUri = '';
@@ -235,6 +241,7 @@ class NewPost extends Component {
                     caption: caption,
                     postType: "reels",
                     tags: findHashtags(caption),
+                    ...act
                 }
             }
             this.uploadAction(feed)
@@ -249,6 +256,7 @@ class NewPost extends Component {
                     caption: caption,
                     postType: "post",
                     tags: findHashtags(caption),
+                    ...act
                 }
             }
             this.uploadAction(feed)
@@ -258,6 +266,7 @@ class NewPost extends Component {
                 source: media,
                 params: {
                     postType: "story",
+                    ...act
                 }
             }
             this.uploadAction(feed)
@@ -298,8 +307,16 @@ class NewPost extends Component {
         }
     }
 
+    handleChange = (ind) => {
+        const { postActions } = this.state;
+        let arr = [...postActions]
+        let current = arr[ind].value
+        arr[ind].value = !current
+        this.setState({ postActions: [...arr] })
+    }
+
     render() {
-        const { media, picker, player, vidsrc, mode, activePost, cameracapture } = this.state;
+        const { media, picker, player, vidsrc, mode, activePost, cameracapture, postActions } = this.state;
         const { isFetching } = this.props.feedReducer
         return (
             <SafeAreaView style={[CommonStyles.container, { padding: 0 }]}>
@@ -333,9 +350,10 @@ class NewPost extends Component {
                         onChangeText={caption => this.setState({ caption })}
                     />}
                     <Seperator />
-                    {data.map((item, index) => <PostOptions
+                    {postActions.map((item, index) => <PostOptions
                         item={item}
                         index={index}
+                        onchange={() => this.handleChange(index)}
                     />)}
                 </ScrollView>
                 <Modal

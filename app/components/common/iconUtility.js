@@ -8,7 +8,7 @@ const AppIcon = ({ name, size, color, style }) => <Image
     source={name}
 />
 
-const IconButtons = ({ name, size = 20, color, action, style, active, pressin, pressout }) => <TouchableOpacity style={[CommonStyles.clickable, CommonStyles.center, style]} onPress={action} onLongPress={pressin} onPressOut={pressout} activeOpacity={0.5}>
+const IconButtons = ({ name, size = 20, color, action, style, active, pressin, pressout }) => <TouchableOpacity style={[CommonStyles.clickable, CommonStyles.center, style]} onPress={action} onLongPress={pressin} hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }} onPressOut={pressout} activeOpacity={0.5}>
     <AppIcon
         size={size}
         color={color}

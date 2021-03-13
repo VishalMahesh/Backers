@@ -24,13 +24,13 @@ const ListItem = ({ item, index, action }) => <View style={[
     </TouchableOpacity>
 </View>
 
-const FeedOption = ({ data, onCancel, action }) => <SafeAreaView style={{ flex: 1 }}>
+const FeedOption = ({ data, onCancel, action, profile }) => <SafeAreaView style={{ flex: 1 }}>
     <TouchableOpacity onPress={onCancel} style={{ flex: 1 }} />
     <View style={[CommonStyles.rounded, { backgroundColor: Colors.light }]}>
         {data.map((item, index) => <ListItem
             item={item}
             index={index}
-            action={() => { onCancel(), action(index) }}
+            action={() => { onCancel(), action(profile ? index : item.action) }}
         />)}
     </View>
 </SafeAreaView>

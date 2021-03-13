@@ -19,22 +19,27 @@ export default class AllSettings extends Component {
     }
 
     handleAction = (ind) => {
-        if (ind == 1) {
+        if (ind == 0) {
             Navigation.navigate('EditSubscription')
         }
-        else if (ind == 2) {
+        else if (ind == 1) {
             Navigation.navigate('InfluencerScheduler')
         }
-        else if (ind == 3) {
+        else if (ind == 2) {
             Navigation.navigate('ScheduledCalls')
         }
-        else if (ind == 4) {
+        else if (ind == 3) {
             Navigation.navigate('Payments')
         }
-        else if (ind == 5) {
+        else if (ind == 4) {
             Navigation.navigate('Settlements')
         }
-        else if (ind == 10) {
+        else if (ind == 5) {
+            const { onEdit } = this.props.navigation.state.params
+            onEdit()
+            Navigation.back()
+        }
+        else if (ind == 6) {
             this._logout()
         }
     }
@@ -75,6 +80,7 @@ export default class AllSettings extends Component {
                         data={ProfileAllSetting}
                         action={this.handleAction}
                         onCancel={() => { }}
+                        profile
                     />
                     <BlankSpace
                         offset={wide * 0.2}

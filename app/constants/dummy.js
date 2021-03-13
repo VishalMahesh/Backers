@@ -182,35 +182,59 @@ export const OptionList = [
   {
     id: 0,
     icon: Images.chat,
-    label: "Message this person"
+    label: "Message this person",
+    action: "MESSAGE"
   },
   {
     id: 1,
     icon: Images.unfollow,
-    label: "Unfollow this person"
+    label: "Unfollow this person",
+    action: "FOLLOWUNFOLLOW"
   },
   {
     id: 2,
     icon: Images.link,
-    label: "Copy link to the post"
+    label: "Copy link to the post",
+    action: "COPYLINK"
   },
   {
     id: 3,
     icon: Images.flag,
-    label: "Flag this post"
+    label: "Flag this post",
+    action: "FLAG"
   },
   {
     id: 4,
     icon: Images.outline,
-    label: "Hide this post"
+    label: "Hide this post",
+    action: "HIDE"
   },
 ]
 
-export const deleteOption = [
+export const CurrentpostOptions = [
+  {
+    id: 1,
+    icon: Images.link,
+    label: "Copy link to the post",
+    action: "COPYLINK"
+  },
+  {
+    id: 2,
+    icon: Images.flag,
+    label: "Flag this post",
+    action: "FLAG"
+  },
+  {
+    id: 3,
+    icon: Images.outline,
+    label: "Hide this post",
+    action: "HIDE"
+  },
   {
     id: 4,
     icon: Images.trash,
-    label: "Delete this post"
+    label: "Delete this post",
+    action: "DELETE"
   },
 ]
 
@@ -832,18 +856,18 @@ export const ProfileAllSetting = [
   //   label: "Change account type",
   //   icon: Images.manage
   // },
+  // {
+  //   id: 1,
+  //   label: "Manage Users",
+  //   icon: Images.manage
+  // },
   {
-    id: 1,
-    label: "Manage Users",
-    icon: Images.manage
-  },
-  {
-    id: 1,
+    id: 0,
     label: "Edit your subscription plans",
     icon: Images.dollar
   },
   {
-    id: 2,
+    id: 1,
     label: "Edit video call settings",
     icon: Images.videoCall
   },
@@ -862,28 +886,28 @@ export const ProfileAllSetting = [
     label: "Settlements",
     icon: Images.manage
   },
-  {
-    id: 5,
-    label: "Lock profile",
-    icon: Images.lock
-  },
+  // {
+  //   id: 5,
+  //   label: "Lock profile",
+  //   icon: Images.lock
+  // },
   {
     id: 5,
     label: "Switch to edit mode",
     icon: Images.editpen
   },
+  // {
+  //   id: 5,
+  //   label: "Archive your posts",
+  //   icon: Images.hide
+  // },
+  // {
+  //   id: 5,
+  //   label: "Delete your posts",
+  //   icon: Images.delete
+  // },
   {
-    id: 5,
-    label: "Archive your posts",
-    icon: Images.hide
-  },
-  {
-    id: 5,
-    label: "Delete your posts",
-    icon: Images.delete
-  },
-  {
-    id: 5,
+    id: 6,
     label: "Log out",
     icon: Images.logout
   },
@@ -1064,54 +1088,53 @@ export const PaymentOptions = [
 export const PredefinedSubscription = [
   {
     title: "Free Tier • Free",
-    desc: "Free posts & stories"
+    desc: "Free posts & stories",
+    type: "free"
   },
   {
-    title: "Basic Tier • $10/m",
+    title: "Basic Tier",
     desc: "Free posts & stories\nExclusive posts & stories\nMessaging",
-    selected: true
+    type: "basic"
   },
   {
-    title: "Standard Tier • $16/m",
+    title: "Standard Tier",
     desc: "Free posts & stories\nExclusive posts & stories\nMessaging\nOne to one audio call",
-    selected: true
+    type: "standard"
   },
   {
-    title: "Premium Tier • $20/m",
+    title: "Premium Tier",
     desc: "Free posts & stories\nExclusive posts & stories\nMessaging\nOne to one audio call\nOne to one video call",
-    selected: true
+    type: "premium"
   },
 ]
 
 
-let freeOptions = [{
+let Options = [{
   label: "Free photos & videos",
-  desc: "User can see the free photos & videos."
-}]
-
-let basicOptions = [{
+  desc: "User can see the free photos & videos.",
+  key: "freePostAndVideos",
+  active: false,
+}, {
   label: "Direct messaging",
-  desc: "User could chat with you."
+  desc: "User could chat with you.",
+  key: "directMessaging",
+  active: false,
 },
 {
   label: "Commenting",
-  desc: "User will be able to schedule one free video call with you."
-}
-]
-
-let standardOptions = [{
+  desc: "User will be able to schedule one free video call with you.",
+  key: "commenting",
+  active: false,
+}, {
   label: "Audio Calls",
-  desc: "User will be able to have a call with you."
-}]
-
-let premiumOptions = [{
+  desc: "User will be able to have a call with you.",
+  key: "audioCalls",
+  active: false,
+}, {
   label: "Video Calls",
-  desc: "User will be able to schedule one free video call with you."
+  desc: "User will be able to schedule one free video call with you.",
+  key: "videoCalls",
+  active: false,
 }]
 
-export const TierPlans = {
-  Free: freeOptions,
-  Basic: freeOptions.concat(basicOptions),
-  Standard: freeOptions.concat(basicOptions).concat(standardOptions),
-  Premium: freeOptions.concat(basicOptions).concat(standardOptions).concat(premiumOptions),
-}
+export const TierPlans = Options

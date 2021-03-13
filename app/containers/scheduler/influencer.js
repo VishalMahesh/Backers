@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, SafeAreaView, FlatList, ScrollView, TouchableOpacity } from 'react-native'
 import { Label } from '../../components/common/label'
-import { Seperator } from '../../components/common/seperator'
+import { BlankSpace, Seperator } from '../../components/common/seperator'
 import { Colors, CommonStyles, containerPadding, Dummy, wide } from '../../constants'
 import Images from '../../constants/Images'
 import Navigation from '../../lib/Navigation'
@@ -134,6 +134,9 @@ class InfluencerScheduler extends Component {
                             size={25}
                         />
                     </TouchableOpacity>
+                    <BlankSpace
+                        offset={wide * 0.2}
+                    />
                 </ScrollView>
             </SafeAreaView>
         )

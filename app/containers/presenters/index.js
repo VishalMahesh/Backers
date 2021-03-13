@@ -6,6 +6,8 @@ import { Appreciation, ModalBox } from "../../components/feed/appreciation";
 import StoryView from "../stories";
 import { OptionList } from "../../constants/dummy";
 import { Platform } from "react-native";
+import Images from "../../constants/Images";
+import { SubscriptionModal } from "../../components/subscription";
 const Presenters = ({
     comment,
     closeComment,
@@ -20,6 +22,8 @@ const Presenters = ({
     height,
     optiondata = OptionList,
     action,
+    subscription,
+    closeSubscription,
     ...props
 }) => {
 
@@ -103,6 +107,15 @@ const Presenters = ({
             isVisible={story}>
             <StoryView
                 onClose={closeStory}
+            />
+        </Modal>
+        <Modal
+            style={{ padding: 0, margin: 0 }}
+            useNativeDriver={Platform.OS == 'ios' ? false : true}
+            onBackButtonPress={closeSubscription}
+            isVisible={subscription}>
+            <SubscriptionModal
+                onClose={closeSubscription}
             />
         </Modal>
     </>

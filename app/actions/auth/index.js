@@ -18,6 +18,9 @@ import {
   TOKEN_REQUEST,
   TOKEN_SUCCESS,
   TOKEN_FAILURE,
+  API_REQUEST,
+  API_SUCCESS,
+  API_FAILURE
 } from '../action-type';
 import { setUserAuth, setObject, setUserToken, deleteToken, deleteAuth } from '../../middleware';
 import axios from 'axios';
@@ -46,11 +49,13 @@ function loginFailure(message) {
 }
 
 export function login(credentials, url, cb) {
+  console.log(credentials);
   return (dispatch, getState) => {
     dispatch(loginRequest());
     return axios
       .post(url, credentials)
       .then((response) => {
+        debugger
         if (response.data.status) {
           let data = response.data.success.data[0];
           let token = response.data.success.token;
@@ -310,5 +315,125 @@ export function DeviceToken(credentials, cb) {
         cb(false, errorMsg)
         return dispatch(loginFailure(error));
       });
+  };
+}
+
+function apiRequest() {
+  return {
+    type: API_REQUEST,
+  };
+}
+
+function apiSuccess() {
+  return {
+    type: API_SUCCESS,
+  };
+}
+
+function apiFailure() {
+  return {
+    type: API_FAILURE,
+  };
+}
+
+export function searchUsers(string, cb) {
+  return (dispatch, getState) => {
+    dispatch(apiRequest())
+    return axios.get(`${AppURLs.searchUsers}${string}`).then(res => {
+      debugger
+      if (res.data.status) {
+        let data = res.data.success.data
+        getState().entities.user.searchedUsers = data
+        cb(data)
+      }
+      else {
+        cb([])
+      }
+      dispatch(apiSuccess())
+    })
+      .catch(err => {
+        debugger
+        console.log(err);
+        cb([])
+        dispatch(apiFailure())
+      })
+  };
+}
+
+export function FollowUser(data) {
+  return (dispatch, getState) => {
+    dispatch(apiRequest())
+    return axios.post(AppURLs.followUnfollow, data).then(res => {
+      if (res.data.status) {
+        debugger
+      }
+      dispatch(apiSuccess())
+    })
+      .catch(err => {
+        console.log(err);
+        dispatch(apiFailure())
+      })
+  };
+}
+
+export function updateProfile(param, isImage, cb) {
+  let data = new FormData();
+  if (isImage) {
+    data.append('attachments', {
+      uri: param.uri,
+      name: `${JSON.stringify(Math.random())}.jpg`,
+      type: `image/jpeg`,
+    });
+  }
+  else {
+    Object.keys(param).map((key) => {
+      data.append(key, param[key]);
+    });
+  }
+  console.log(data);
+  debugger
+  return (dispatch, getState) => {
+    dispatch(apiRequest())
+    return axios.put(AppURLs.updateProfile, data).then(response => {
+      if (response.data.status) {
+        let data = response.data.success.data[0];
+        getState().entities.user.LoginData = data;
+        setUserAuth(data).then((res) => {
+          cb(true);
+        });
+      }
+      else {
+        cb(false)
+      }
+      dispatch(apiSuccess())
+    })
+      .catch(err => {
+        console.log(err);
+        cb(false)
+        dispatch(apiFailure())
+      });
+  };
+}
+
+export function checkUserName(data, cb) {
+  debugger
+  return (dispatch, getState) => {
+    dispatch(apiRequest())
+    return axios.post(AppURLs.checkUserNameAvailability, data).then(response => {
+      debugger
+      if (response.data.status) {
+        debugger
+        cb(true)
+      }
+      else {
+        cb(false)
+      }
+      dispatch(apiSuccess())
+    })
+      .catch(err => {
+        debugger
+        cb(false)
+        dispatch(apiFailure())
+      })
   };
 }

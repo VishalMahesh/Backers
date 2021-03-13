@@ -17,7 +17,7 @@ const PostActions = ({ comment, share, payout, reel, index, likeCount = "2.4k", 
     const [like, onLike] = useState(isLike);
     return <View style={[{ height: reel ? wide * 0.5 : wide * 0.15, }, reel && { justifyContent: 'space-around', position: 'absolute', right: 5, bottom: wide * 0.4 + offset.bottom, alignItems: 'flex-end' }, !reel && CommonStyles.row]}>
         <PostButton action={() => { onLike(!like), onChange(!like ? likes + 1 : likes - 1), props.onLike(isLike, index) }} icon={like ? Images.heartred : Images.heart} label={likes} />
-        <PostButton action={comment} icon={Images.message} label={commentCount} />
+        {!props.iscommentingavailable && <PostButton action={comment} icon={Images.message} label={commentCount} />}
         <PostButton action={share} icon={Images.send} />
         <PostButton action={payout} style={reel ? CommonStyles.payButton : CommonStyles.tipButton} icon={Images.dollar} />
     </View>
@@ -39,18 +39,18 @@ const IconLabel = ({ label, image }) => <View style={[CommonStyles.row]}>
     />
 </View>
 
-const PriceInfo = () => <View style={[{ height: 30, justifyContent: 'space-between' }, CommonStyles.row]}>
-    <IconLabel label={"3"} image={Images.png} />
+const PriceInfo = ({ count }) => <View style={[{ height: 30, justifyContent: 'space-between' }, CommonStyles.row]}>
+    <IconLabel label={count} image={Images.png} />
     <IconLabel label={"4"} image={Images.dollar} />
 </View>
 
-const UnlockInfo = ({ action }) => <View style={{ flex: 1, padding: containerPadding / 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
+const UnlockInfo = ({ count, action }) => <View style={{ flex: 1, padding: containerPadding / 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
     <View style={[{ flex: 1 }, CommonStyles.center]}>
         <IconButtons name={Images.lock} color={Colors.light} size={26} />
         <Label label={"Unlock"} size={18} bold color={Colors.light} />
     </View>
     <View style={[styles.subCont, CommonStyles.rounded]}>
-        <PriceInfo />
+        <PriceInfo count={count} />
         <Label
             label={"Unlock this post & more such amazing posts from this creator for a month for just $4"}
             bold
@@ -76,7 +76,7 @@ const UserProfile = ({ onMore, onProfile, data }) => <View
         user={(data.users) ? data.users : null}
     >
         <Image
-            source={Images.img1}
+            source={data.users.profileImg !== null ? { uri: data.users.profileImg } : Images.img1}
             style={CommonStyles.avatarsmall}
         />
     </ProfileButton>

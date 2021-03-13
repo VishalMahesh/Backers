@@ -48,7 +48,7 @@ const SubmitButtons = ({ action, name, label, dark, bold, size = 16, lightTheme,
     if (!dark) {
         return <TouchableOpacity
             activeOpacity={0.5}
-            style={[CommonStyles.submitBtn2, CommonStyles.row, CommonStyles.btnRounded]}
+            style={[CommonStyles.submitBtn2, CommonStyles.row, CommonStyles.btnRounded, style]}
             onPress={action}>
             <AppIcon
                 name={name}

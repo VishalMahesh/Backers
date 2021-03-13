@@ -4,7 +4,7 @@ import { BottomTab } from '../../components/common/bottomtabs'
 import FeedComponent from '../../components/feed/zoomableFeed/Photo'
 import Stories from '../../components/home'
 import { Colors, CommonStyles, wide } from '../../constants'
-import { deleteOption, OptionList } from '../../constants/dummy'
+import { CurrentpostOptions, OptionList } from '../../constants/dummy'
 import { Header } from '../../utils/Headers/CustomHeader'
 import { Suggestions } from '../../constants/dummy'
 import Modal from 'react-native-modal'
@@ -34,6 +34,9 @@ type State = {
     selectedPhoto?: SelectedPhotoType;
     isDragging: boolean;
 };
+
+let FeedKey = 1;
+
 class Home extends Component {
     static navigationOptions = {
         header: null
@@ -61,7 +64,8 @@ class Home extends Component {
             activeuser: null,
             activeIndex: null,
             viewPortPostIndex: null,
-            loading: true
+            loading: true,
+            subscription: false
         };
         this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
         this.viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
@@ -95,6 +99,7 @@ class Home extends Component {
             this.props.dispatch(fetchStories(e => {
                 this.setState({ loading: false })
             }))
+            FeedKey = FeedKey + 1;
         }))
     }
 
@@ -122,7 +127,7 @@ class Home extends Component {
         const { activeuser } = this.state;
         const { LoginData } = this.props.user
         if (activeuser && activeuser._id == LoginData._id) {
-            return OptionList.concat(deleteOption)
+            return CurrentpostOptions
         }
         else {
             return OptionList
@@ -130,19 +135,38 @@ class Home extends Component {
     }
 
     handlePostActions = (ind) => {
-        const { activepost, activeIndex } = this.state;
-        if (ind == 5) {
-            showConfirmationAlert("Are you sure to delete this post?", () => {
-                this.props.dispatch(deletePosts(activepost, activeIndex, res => {
-                    if (res) {
-                        showErrorAlert("Post deleted successfully", "Success")
-                    }
-                }))
-            })
+        switch (ind) {
+            case "MESSAGE":
+                break;
+            case "FOLLOWUNFOLLOW":
+                break;
+            case "COPYLINK":
+                break;
+            case "FLAG":
+                break;
+            case "HIDE":
+                break;
+            case "DELETE":
+                this.deletePost();
+                break;
+            default:
+                break;
         }
     }
 
+    deletePost = () => {
+        const { activepost, activeIndex } = this.state;
+        showConfirmationAlert("Are you sure to delete this post?", () => {
+            this.props.dispatch(deletePosts(activepost, activeIndex, res => {
+                if (res) {
+                    showErrorAlert("Post deleted successfully", "Success")
+                }
+            }))
+        })
+    }
+
     _onRefresh = () => {
+        FeedKey = FeedKey + 1;
         this.webCall()
     }
 
@@ -156,7 +180,7 @@ class Home extends Component {
 
 
     render() {
-        const { comment, option, pay, verifyEmail, story, isDragging, selectedPhoto, activepost, viewPortPostIndex, loading } = this.state;
+        const { comment, option, pay, verifyEmail, story, isDragging, selectedPhoto, activepost, viewPortPostIndex, loading, subscription } = this.state;
         const { feeds, homeFeeds } = this.props.feed
         const { stories } = this.props.story
         const { isFetching, isRefreshing } = this.props.feedReducer
@@ -168,6 +192,7 @@ class Home extends Component {
                     />
                     <FlatList
                         data={homeFeeds}
+                        key={FeedKey}
                         ListHeaderComponent={() => <Stories
                             data={stories}
                             action={() => this.setState({ story: true })}
@@ -188,7 +213,7 @@ class Home extends Component {
                             share={onShare}
                             onProfile={() => Navigation.navigate("Profile")}
                             key={item.id}
-                            onDetails={() => Navigation.navigate("Details", { index })}
+                            onDetails={() => Navigation.navigate("Details", { post: item })}
                             isDragging={isDragging}
                             comment={() => this.actionComment(true, item._id)}
                             onLike={(type) => this.likeAction(item, type, index)}
@@ -230,6 +255,8 @@ class Home extends Component {
                     activePost={activepost}
                     optiondata={this.getOptions()}
                     action={this.handlePostActions}
+                    subscription={subscription}
+                    closeSubscription={() => this.setState({ subscription: false })}
                 />
                 <AppLoader
                     visible={loading}

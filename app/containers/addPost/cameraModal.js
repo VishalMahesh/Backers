@@ -69,9 +69,12 @@ class CameraModal extends Component {
 
 
     startRecord = () => {
-        if (!this.state.onlyImage) {
-            this.increm();
-            setTimeout(this._recordVideo.bind(this), 50);
+        const { noVideo } = this.props
+        if (!noVideo) {
+            if (!this.state.onlyImage) {
+                this.increm();
+                setTimeout(this._recordVideo.bind(this), 50);
+            }
         }
     };
 

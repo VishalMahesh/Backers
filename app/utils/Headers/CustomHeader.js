@@ -19,11 +19,11 @@ const Header = ({ actions, reel }) => <View style={styles.container}>
     resizeMode={'contain'}
   />
   <View style={styles.subcont}>
-    {!reel && <IconButtons
+    {/* {!reel && <IconButtons
       name={Images.videoCall}
       size={26}
       action={() => actions("Video")}
-    />}
+    />} */}
     <IconButtons
       name={Images.chat}
       size={26}

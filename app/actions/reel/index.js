@@ -21,6 +21,15 @@ export function setActiveTab(tab) {
 }
 
 
+export function unLockPost(item) {
+    return (dispatch, getState) => {
+        var arr = [...getState().entities.reel.reelVideos]
+        let objInd = arr.findIndex(e => e._id == item._id)
+        arr[objInd].premiumPost = false
+        getState().entities.reel.reelVideos = [...arr];
+    };
+}
+
 function apiRequest() {
     return {
         type: API_REQUEST,

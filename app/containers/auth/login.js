@@ -84,20 +84,13 @@ class Login extends Component {
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            if (signin) {
-                let user = { email: userInfo.user.email }
-                this.handleloginDispatch(user, AppURLs.googlelogin)
-            }
-            else {
-                this.hanldeGoogleSignup(userInfo)
-            }
-            //this._signOut()
+            this.hanldeGoogleSignup(userInfo, AppURLs.googlesignup)
             this.setState({ userInfo, error: null });
         } catch (error) {
             switch (error.code) {
                 case statusCodes.SIGN_IN_CANCELLED:
                     // sign in was cancelled
-                    Alert.alert('cancelled');
+                    // Alert.alert('cancelled');
                     break;
                 case statusCodes.IN_PROGRESS:
                     // operation (eg. sign in) already in progress
@@ -133,17 +126,9 @@ class Login extends Component {
                 if (result.isCancelled) {
                     console.log("Login cancelled");
                 } else {
-                    if (signin) {
-                        Backend.fbIinfo((data) => {
-                            let user = { email: data.email }
-                            that.handleloginDispatch(user, AppURLs.fblogin)
-                        })
-                    }
-                    else {
-                        Backend.fbIinfo((data) => {
-                            that.handleFacebookSignup(data)
-                        })
-                    }
+                    Backend.fbIinfo((data) => {
+                        that.handleFacebookSignup(data)
+                    })
                 }
             },
             function (error) {
@@ -153,42 +138,20 @@ class Login extends Component {
 
     }
 
-    _signOut = async () => {
-        try {
-            await GoogleSignin.revokeAccess();
-            await GoogleSignin.signOut();
-
-            this.setState({ userInfo: null, error: null });
-            Navigation.navigate("App")
-        } catch (error) {
-            this.setState({
-                error,
-            });
-        }
-    };
 
     handleLogin = (index) => {
         const { signin } = this.props;
-        if (signin) {
-            if (index == 0) {
-                this._fblogin()
-            }
-            else if (index == 1) {
-                // LoginManager.logOut()
-                this._googlesignIn()
-            }
-            else if (index == 2) {
+        if (index == 0) {
+            this._fblogin()
+        }
+        else if (index == 1) {
+            this._googlesignIn()
+        }
+        else if (index == 2) {
+            if (signin) {
                 this.flatlist_ref.scrollToIndex({ animated: true, index: 1 })
             }
-        }
-        else {
-            if (index == 0) {
-                this._fblogin()
-            }
-            else if (index == 1) {
-                this._googlesignIn()
-            }
-            else if (index == 2) {
+            else {
                 Navigation.navigate("WalkThrough")
             }
         }

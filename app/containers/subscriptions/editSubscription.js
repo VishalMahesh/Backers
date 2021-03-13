@@ -1,5 +1,7 @@
 import React, { Component, useState } from 'react'
 import { SafeAreaView, View, FlatList } from 'react-native'
+import { connect } from 'react-redux'
+import { fetchMySubscriptions, fetchSubscriptions, fetchUserSubscriptions, updateSubscriptions } from '../../actions/subscription'
 import { AppIcon, IconButtons } from '../../components/common/iconUtility'
 
 import { Label } from '../../components/common/label'
@@ -8,32 +10,93 @@ import { Colors, CommonStyles } from '../../constants'
 import { PredefinedSubscription } from '../../constants/dummy'
 import Images from '../../constants/Images'
 import Navigation from '../../lib/Navigation'
+import AppLoader from '../../utils/Apploader'
 import { AuthHeader } from '../../utils/Headers/CustomHeader'
 
-export const Actions = ({ size = 34, align = "flex-end" }) => {
-    const [active, onChange] = useState(false)
+export const Actions = ({ size = 34, align = "flex-end", activeVal = false, Changed }) => {
+    const [active, onChange] = useState(activeVal)
     return <IconButtons
         name={active ? Images.on : Images.off}
-        action={() => onChange(!active)}
+        action={() => { onChange(!active), Changed(!active) }}
         size={size}
         style={[CommonStyles.noPadding, { justifyContent: align, height: 40 }]}
     />
 }
 
-export default class EditSubscription extends Component {
+export const Container = ({ ...props }) => <View style={[
+    CommonStyles.rounded,
+    CommonStyles.containerPadding,
+    CommonStyles.verticalPadding,
+    { backgroundColor: Colors.lightbase, flexDirection: 'row' }
+]}>
+    {props.children}
+</View>
 
-    handleActions = (ind) => {
-        Navigation.navigate("TierSettings", { id: ind })
+
+const getDisplayName = (title, displayName, ind, check) => {
+    if (displayName && !ind == 0) {
+        if (check) {
+            return displayName + ' • $'
+        }
+        else {
+            return displayName
+        }
+    }
+    else {
+        if (ind == 0) {
+            return title
+        }
+        else {
+            if (check) {
+                return title + ' • $'
+            }
+            else {
+                return title
+            }
+        }
+    }
+}
+
+class EditSubscription extends Component {
+
+
+    state = {
+        data: []
     }
 
-    renderItems = ({ item, index }) => <View style={[
-        CommonStyles.rounded,
-        CommonStyles.containerPadding,
-        { backgroundColor: Colors.lightbase, flexDirection: 'row' }
-    ]}>
+    componentDidMount() {
+        this.webCall()
+    }
+
+
+    webCall = () => {
+        this.props.dispatch(fetchMySubscriptions()).then(() => {
+            const { userSubscriptions } = this.props.data
+            let arr = []
+            PredefinedSubscription.forEach(item => {
+                let ObjInd = userSubscriptions.findIndex((e) => e.type == item.type);
+                let obj = {}
+                obj = { ...userSubscriptions[ObjInd], ...item }
+                arr.push(obj)
+            })
+            this.setState({ data: [...arr] })
+        })
+    }
+
+    handleActions = (ind, item, tiername) => {
+        Navigation.navigate("TierSettings", { id: ind, item: item, refresh: this.webCall, tiername: tiername })
+    }
+
+    handleChange = (type, id,) => {
+        this.props.dispatch(updateSubscriptions(id, false, { active: type }, res => {
+
+        }))
+    }
+
+    renderItems = ({ item, index }) => <Container>
         <View style={{ flex: 1, }}>
             <Label
-                label={item.title}
+                label={index == 0 ? item.title : `${getDisplayName(item.title, item.displayName, index, true) + item.price}/m`}
                 size={18}
             />
             <Label
@@ -47,13 +110,15 @@ export default class EditSubscription extends Component {
                 name={Images.editalt}
                 size={24}
                 style={{ justifyContent: 'flex-start', height: 40 }}
-                action={() => this.handleActions(index)}
+                action={() => this.handleActions(index, item, getDisplayName(item.title, item.displayName, index, false))}
             />
-            <Actions />
+            <Actions activeVal={item.active} Changed={(e) => this.handleChange(e, item._id)} />
         </View>
-    </View>
+    </Container>
 
     render() {
+        const { isFetching } = this.props.reelReducer
+        const { data } = this.state
         return (
             <SafeAreaView style={[CommonStyles.container, { padding: 0 }]}>
                 <AuthHeader
@@ -67,12 +132,24 @@ export default class EditSubscription extends Component {
                         style={{ marginBottom: 20 }}
                     />
                     <FlatList
-                        data={PredefinedSubscription}
+                        data={data}
                         renderItem={this.renderItems}
                         ItemSeparatorComponent={() => <BlankSpace />}
                     />
                 </View>
+                <AppLoader visible={isFetching} />
             </SafeAreaView>
         )
     }
 }
+function mapStateToProps(state) {
+    const { entities, reelReducer } = state
+    return {
+        data: entities.profile,
+        user: entities.user,
+        reelReducer
+    }
+}
+
+
+export default connect(mapStateToProps)(EditSubscription)

@@ -36,7 +36,7 @@ class FormInputs extends Component {
   }
 
   renderAuthInput() {
-    const { label, placeholder, value, secondIcon, style, row } = this.props;
+    const { label, placeholder, value, secondIcon, style, row, profileInp } = this.props;
     const { secured, focused } = this.state;
     return (
 
@@ -61,7 +61,7 @@ class FormInputs extends Component {
             onPress={this.props.onClear}
             style={(CommonStyles.center, { paddingLeft: containerPadding, })}>
             <Image
-              source={Images.close}
+              source={profileInp ? Images.check : Images.close}
               resizeMode={'contain'}
               style={{
                 height: 16,
@@ -76,15 +76,17 @@ class FormInputs extends Component {
   }
 
   renderCommentInput = () => {
-    const { Data, onChangeText, onSubmitEditing, placeholder, appreciation } = this.props
+    const { Data, onChangeText, onSubmitEditing, placeholder, appreciation, onFocus } = this.props
     return <View style={[{ height: "100%", width: "88%", backgroundColor: Colors.lightbase }, CommonStyles.rounded]}>
       <TextInput
         style={{ flex: 1, paddingHorizontal: containerPadding }}
         placeholder={placeholder}
         value={Data}
-        returnKeyType={"send"}
+        returnKeyType={'done'}
         onChangeText={onChangeText}
         blurOnSubmit={appreciation ? true : false}
+        keyboardType={appreciation ? 'decimal-pad' : "default"}
+        onFocus={onFocus}
         onSubmitEditing={onSubmitEditing}
         selectionColor={Colors.base}
       />

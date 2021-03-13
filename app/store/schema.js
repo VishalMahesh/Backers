@@ -4,6 +4,7 @@ const authSchema = {
   LoginData: [],
   RegisterData: [],
   Network: true,
+  searchedUsers: []
 };
 
 const feedSchema = {
@@ -19,7 +20,8 @@ const reelschema = {
 
 const profileSchema = {
   userPosts: [],
-  userReels: []
+  userReels: [],
+  userSubscriptions: []
 }
 
 const storyschema = {
@@ -256,7 +258,9 @@ export const slotschema = {
     },
   ],
   userSlots: [],
+  bookedSlots: []
 }
+
 
 export const Schemas = {
   USER: authSchema,

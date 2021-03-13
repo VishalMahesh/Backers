@@ -9,7 +9,7 @@ import { AuthHeader } from '../../utils/Headers/CustomHeader'
 import AppLoader from '../../utils/Apploader';
 import { SubmitButtons } from '../../components/common/buttons'
 import { connect } from 'react-redux'
-import { addBooking, getSchedule } from '../../actions/slots'
+import { addBooking, getOtherUserSchedule } from '../../actions/slots'
 import { formatAMPM } from '../../utils'
 import { showErrorAlert } from '../../utils/info'
 
@@ -59,6 +59,8 @@ class UserScheduler extends Component {
     getUserSchedule = (month) => {
         let dateobj = new Date();
         const { userId } = this.props.navigation.state.params
+        console.log(userId);
+        debugger
         let year = dateobj.getFullYear();
         let totaldays = new Date(year, month, 0).getDate()
         let userObj = {
@@ -66,7 +68,7 @@ class UserScheduler extends Component {
             startDate: `01-${twoDigVal(month)}-${year}`,
             endDate: `${totaldays}-${twoDigVal(month)}-${year}`
         }
-        this.props.dispatch(getSchedule(userObj, (res, data) => {
+        this.props.dispatch(getOtherUserSchedule(userObj, (res, data) => {
             if (res) {
                 let arr = [...data];
                 console.log(arr);

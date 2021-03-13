@@ -37,7 +37,7 @@ export function profilePosts(id, cb) {
           cb(true)
           dispatch(apiSuccess())
         } else {
-          cb(false, response.data.success.message);
+          cb(false, response.data.error.message);
         }
       })
       .catch((error) => {
