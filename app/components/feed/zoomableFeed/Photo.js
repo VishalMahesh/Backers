@@ -24,6 +24,7 @@ import Video from 'react-native-video';
 import FastImage from 'react-native-fast-image'
 import Images from '../../../constants/Images';
 import { ModalBox } from '../../../components/feed/appreciation'
+import Presenters from '../../../containers/presenters';
 
 const RESTORE_ANIMATION_DURATION = 200;
 
@@ -91,6 +92,7 @@ export default class PhotoComponent extends Component {
       activePage: 0,
       isPremium: props.data.premiumPost,
       subs: false,
+      success: false
     }
     this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
     this.viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
@@ -102,7 +104,7 @@ export default class PhotoComponent extends Component {
   }
 
   render() {
-    let { data, index, suggest, payout, comment, share, more, onDetails, shouldPlay } = this.props;
+    let { data, index, suggest, payout, comment, share, more, onDetails, shouldPlay, currentUserPost, user } = this.props;
     const { locked, blur, activePage, isPremium } = this.state;
     return (
       <View ref={(parentNode) => (this._parent = parentNode)}>
@@ -111,6 +113,7 @@ export default class PhotoComponent extends Component {
             <UserProfile
               onMore={more}
               data={data}
+              user={user}
             />
             {AppUtils.exists(data.caption) && <Description
               action={onDetails}
@@ -126,7 +129,7 @@ export default class PhotoComponent extends Component {
                 onViewableItemsChanged={this.handleViewableItemsChanged}
                 viewabilityConfig={this.viewabilityConfig}
                 renderItem={({ item, index }) => <>
-                  {(isPremium) ? <>
+                  {(isPremium && !currentUserPost) ? <>
                     <Image
                       source={{ uri: item.src }}
                       style={[{ height: wide, width: wide * 0.92 }, CommonStyles.rounded]}
@@ -161,7 +164,7 @@ export default class PhotoComponent extends Component {
                     </>}
                 </>}
               />
-              {isPremium && <UnlockInfo
+              {isPremium && !currentUserPost && <UnlockInfo
                 action={() => this.setState({ subs: true })}
                 count={data.attachments.length}
               />}
@@ -217,7 +220,20 @@ export default class PhotoComponent extends Component {
             </View>
           </>}
         </>
-        <Modal
+        <Presenters
+          subs={this.state.success}
+          closeSubs={() => this.setState({ success: false })}
+          subsComplete={() => this.setState({ success: false, locked: false, blur: 0, isPremium: false })}
+          ById={user._id}
+          onComplete={() => this.setState({ subs: false, locked: false, blur: 0, isPremium: false }, () => {
+            setTimeout(() => {
+              this.setState({ success: true })
+            }, 500);
+          })}
+          subscription={this.state.subs}
+          closeSubscription={() => this.setState({ subs: false })}
+        />
+        {/* <Modal
           style={{ padding: 0, margin: 0 }}
           swipeDirection={'down'}
           onSwipeComplete={() => this.setState({ subs: false })}
@@ -233,7 +249,7 @@ export default class PhotoComponent extends Component {
             btnlabel={"Okay"}
             btncolor={Colors.green}
           />
-        </Modal>
+        </Modal> */}
       </View>
     );
   }

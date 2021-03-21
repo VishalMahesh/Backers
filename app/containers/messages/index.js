@@ -23,7 +23,7 @@ export default class ChatContainer extends Component {
     }
     renderViews = ({ item, index }) => {
         return <Messages
-            data={item == 1 ? postComments : postComments2}
+            data={item == 1 ? postComments2 : postComments2}
             handler={(room) => Navigation.navigate("ChatRoom", room)}
         />
     }
@@ -83,6 +83,7 @@ const styles = {
     },
     labbtn: {
         paddingVertical: containerPadding,
-        minWidth: wide * 0.12
+        minWidth: wide * 0.12,
+        marginRight: 10
     }
 }

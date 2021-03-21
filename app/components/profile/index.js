@@ -15,10 +15,10 @@ class ProfileButton extends React.Component {
         return this.props.comment ? (
             <Text onPress={this._seeUserProfile}>{this.props.children}    </Text>
         ) : (
-                <TouchableOpacity {...this.props} onPress={this._seeUserProfile}>
-                    {this.props.children}
-                </TouchableOpacity>
-            );
+            <TouchableOpacity {...this.props} onPress={this._seeUserProfile}>
+                {this.props.children}
+            </TouchableOpacity>
+        );
     }
 }
 

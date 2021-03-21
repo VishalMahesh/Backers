@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, FlatList, ScrollView, LayoutAnimation, Platform, UIManager } from 'react-native'
+import { Text, View, SafeAreaView, FlatList, ScrollView, LayoutAnimation, Platform, UIManager, Linking } from 'react-native'
 import { SubmitButtons } from '../../components/common/buttons'
 import { IconButtons } from '../../components/common/iconUtility'
 import { Label } from '../../components/common/label'
@@ -12,6 +12,11 @@ import { CalendarComponent } from '../../components/scheduler/calendar'
 import { getMyBookedSlots } from '../../actions/slots'
 import { connect } from 'react-redux'
 import AppLoader from '../../utils/Apploader'
+import NoData from '../../components/common/noData'
+import AppUtils from '../../utils'
+
+
+
 class ScheduledCalls extends Component {
     constructor() {
         super();
@@ -27,16 +32,25 @@ class ScheduledCalls extends Component {
 
 
     componentDidMount() {
-        this.props.dispatch(getMyBookedSlots())
+        const { LoginData } = this.props.User;
+        let user = {
+            bookedBy: LoginData._id
+        }
+        this.props.dispatch(getMyBookedSlots(user))
+    }
+
+    handleCall = (url) => {
+        Linking.openURL(url)
+            .catch((err) => alert(`Can't Open URL: ${url}`))
     }
 
     renderInfo = ({ item, index }) => <View style={styles.container}>
         <View style={[CommonStyles.row, CommonStyles.btmborder, { padding: 10, justifyContent: "space-between" }]}>
             <Label
-                label={item.date}
+                label={AppUtils.prettierDate(item.bookingDate)}
             />
             <Label
-                label={item.time}
+                label={`${AppUtils.prettierTime(item.bookingStartTime)} - ${AppUtils.prettierTime(item.bookingEndTime)}`}
             />
         </View>
         <View style={{ padding: 10 }}>
@@ -47,7 +61,7 @@ class ScheduledCalls extends Component {
                 size={15}
             >
                 <Label
-                    label={item.user}
+                    label={item.bookedBy.userName}
                     style={{ lineHeight: 20 }}
                     size={15}
                 />
@@ -59,9 +73,10 @@ class ScheduledCalls extends Component {
                 size={15}
             >
                 <Label
-                    label={item.desc}
+                    label={item.description ? item.description : "No Description"}
                     style={{ lineHeight: 20 }}
                     size={15}
+                    color={item.description ? Colors.dark : Colors.shade}
                 />
             </Label>
             <View style={[CommonStyles.row, { justifyContent: 'space-between' }]}>
@@ -69,10 +84,11 @@ class ScheduledCalls extends Component {
                     dark
                     label={"Join the video call"}
                     style={{ height: 40, width: "70%" }}
+                    action={() => this.handleCall(item.videoCallUrl)}
                 />
                 <IconButtons
                     name={Images.callbox}
-                    action={() => { }}
+                    action={() => this.handleCall(item.videoCallUrl)}
                     size={40}
                 />
                 <IconButtons
@@ -88,13 +104,12 @@ class ScheduledCalls extends Component {
         const { expanded } = this.state;
         const { isFetching } = this.props.slotReducer
         const { bookedSlots } = this.props.Data
-        console.log(bookedSlots);
         return (
             <SafeAreaView style={[CommonStyles.container, { padding: 0 }]}>
-                <AuthHeader
+                {/* <AuthHeader
                     label={"Scheduled video calls"}
                     primaryAction={() => Navigation.back()}
-                />
+                /> */}
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={CommonStyles.horizontalPadding}>
                         <OptionButton
@@ -111,9 +126,10 @@ class ScheduledCalls extends Component {
                             />
                         </View>
                         <FlatList
-                            data={Dummy.ScVideoCalls}
+                            data={bookedSlots}
                             renderItem={this.renderInfo}
                             showsVerticalScrollIndicator={false}
+                            ListEmptyComponent={<NoData />}
                         />
                         <View style={{ height: 100 }} />
                     </View>

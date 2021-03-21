@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   feedReducer,
   storyReducer,
   slotReducer,
-  reelReducer
+  reelReducer,
 });
 
 export default rootReducer;

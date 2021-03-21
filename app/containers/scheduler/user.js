@@ -59,8 +59,7 @@ class UserScheduler extends Component {
     getUserSchedule = (month) => {
         let dateobj = new Date();
         const { userId } = this.props.navigation.state.params
-        console.log(userId);
-        debugger
+        //debugger
         let year = dateobj.getFullYear();
         let totaldays = new Date(year, month, 0).getDate()
         let userObj = {

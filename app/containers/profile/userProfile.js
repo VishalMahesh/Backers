@@ -25,6 +25,7 @@ import Gallery from '../addPost/gallery'
 import CameraModal from '../addPost/cameraModal'
 import { checkUserName, updateProfile } from '../../actions/auth'
 import { FormInputs } from '../../components/common/inputs'
+import { BlurRadius } from '../../constants/constant'
 const DeckLabels = ({ start, label1, label2 }) => <View style={{ flex: 1, justifyContent: 'center', alignItems: start ? 'flex-start' : 'flex-end' }}>
     <Label
         label={label1}
@@ -77,13 +78,12 @@ export const ActionButtons = ({ icon, label, base, width, action }) => <Touchabl
 
 const ProfileDeck = ({ name, isCurrent, data, id, edit, pickImage, onStory, profilePic, nameEdit,
     descEdit, nameSave, descSave }) => {
-    console.log(name);
     const [descs, onDesc] = useState(data.aboutMe)
     const [namec, onName] = useState(name)
     return <View style={[{ minHeight: wide * 0.5, marginVertical: containerPadding, padding: containerPadding }, CommonStyles.rounded, CommonStyles.shadow]}>
         <View style={[{ flexDirection: 'row', height: wide * 0.3 }]}>
             <DeckLabels
-                label1={data.counts.followed}
+                label1={data.followedCount}
                 label2={"FOLLOWERS"}
             />
             <View style={[{ flex: 1.5, position: 'relative' }, CommonStyles.center]}>
@@ -107,7 +107,7 @@ const ProfileDeck = ({ name, isCurrent, data, id, edit, pickImage, onStory, prof
                 </View>
             </View>
             <DeckLabels
-                label1={data.counts.following}
+                label1={data.followingCount}
                 label2={"BACKERS"}
                 start
             />
@@ -250,27 +250,6 @@ class UserProfile extends Component {
         }))
     }
 
-    handleAction = (e) => {
-        setTimeout(() => {
-            if (e == 0) {
-                this.setState({ edit: true })
-            }
-            else if (e == 1) {
-                Navigation.navigate("ScheduledCalls")
-                // Navigation.navigate("EditDate")
-            }
-            else if (e == 3) {
-                Clipboard.setString("Test One")
-                setTimeout(() => {
-                    Toast.show('Link Copied');
-                }, 500);
-            }
-            else if (e == 4) {
-                Navigation.navigate("AllSetting")
-            }
-        }, 300);
-    }
-
     onEditCall = () => {
         setTimeout(() => {
             this.setState({ edit: true, nameEdit: true, descEdit: true })
@@ -299,9 +278,17 @@ class UserProfile extends Component {
     }
 
     handleDetails = (item) => {
-        const { reel } = this.state
+        const { reel, user } = this.state
+        const { LoginData } = this.props.Data
+        let obj = {}
+        obj._id = user ? user._id : LoginData._id
+        obj.profileImg = user ? user.profileImg : LoginData.profileImg
+        obj.userName = user ? user.userName : LoginData.userName
         if (!reel) {
-            Navigation.navigate("Details", { post: item })
+            Navigation.navigate("Details", { post: item, user: obj })
+        }
+        else {
+            Navigation.navigate("ReelVideo", { type: "USER", user: obj })
         }
     }
 
@@ -310,7 +297,6 @@ class UserProfile extends Component {
         this.props.dispatch(checkUserName({
             "userName": name
         }), res => {
-            debugger
             if (res) {
                 this.update({ userName: name }, false, true)
             }
@@ -356,7 +342,7 @@ class UserProfile extends Component {
                                 this.props.dispatch(setActiveTab(0));
                                 Navigation.navigate("AddPost")
                             }}
-                            nameSave={(name) => this.handleNameChange(name)}
+                            nameSave={(name) => this.update({ userName: name }, false, true)}
                             descSave={(desc) => this.update({ aboutMe: desc }, false)}
                             id={user ? user._id : LoginData._id}
                             isCurrent={this.isCurrentUserProfile()}
@@ -374,6 +360,7 @@ class UserProfile extends Component {
                                 style={[{ flex: 1, height: wide * 0.3, maxWidth: wide * 0.29 }, getStaus(index) && { marginHorizontal: 7 }]}>
                                 {item.attachments[0].type == "image" ? <Image
                                     source={{ uri: item.attachments[0].src }}
+                                    blurRadius={item.premiumPost && !this.isCurrentUserProfile() ? BlurRadius : 0}
                                     style={[{ borderRadius: 5 }, CommonStyles.full]}
                                 />
                                     :

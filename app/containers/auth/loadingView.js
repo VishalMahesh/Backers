@@ -11,7 +11,6 @@ class LoadingView extends Component {
     async componentDidMount() {
         const user = await getUserAuth()
         if (user) {
-            console.log(user);
             this.props.setUser(user);
             Navigation.navigate('App');
         } else {

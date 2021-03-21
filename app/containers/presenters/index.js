@@ -8,6 +8,7 @@ import { OptionList } from "../../constants/dummy";
 import { Platform } from "react-native";
 import Images from "../../constants/Images";
 import { SubscriptionModal } from "../../components/subscription";
+import { Colors } from "../../constants";
 const Presenters = ({
     comment,
     closeComment,
@@ -82,6 +83,8 @@ const Presenters = ({
             isVisible={pay}>
             <Appreciation
                 onClose={closePay}
+                ById={props.ById}
+                onSend={props.submitPay}
             />
         </Modal>
         <Modal
@@ -116,6 +119,25 @@ const Presenters = ({
             isVisible={subscription}>
             <SubscriptionModal
                 onClose={closeSubscription}
+                ById={props.ById}
+                onComplete={props.onComplete}
+            />
+        </Modal>
+        <Modal
+            style={{ padding: 0, margin: 0 }}
+            swipeDirection={'down'}
+            onSwipeComplete={props.closeSubs}
+            onBackButtonPress={props.closeSubs}
+            useNativeDriver={Platform.OS == 'ios' ? false : true}
+            isVisible={props.subs}>
+            <ModalBox
+                onSubmit={props.subsComplete}
+                closeModal={props.closeSubs}
+                mainLabel={"Successfully Subscribed"}
+                icon={Images.smilesuccess}
+                description={"You have successfully subscribed to view this post."}
+                btnlabel={"Okay"}
+                btncolor={Colors.green}
             />
         </Modal>
     </>

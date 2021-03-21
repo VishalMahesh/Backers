@@ -11,36 +11,38 @@ import { Colors, CommonStyles, containerPadding, wide } from '../../constants'
 import Images from '../../constants/Images'
 import Navigation from '../../lib/Navigation'
 import { AuthHeader } from '../../utils/Headers/CustomHeader'
-
-const UserItem = ({ item, action }) => {
-    const [follow, onFollow] = useState(false)
+import ProfileButton from '../../components/profile'
+const UserItem = ({ item, action, current }) => {
+    const [follow, onFollow] = useState(item.isFollow)
     return <View style={[{ height: 64, marginVertical: containerPadding / 2, backgroundColor: Colors.lightbase, paddingHorizontal: 10 },
     CommonStyles.rounded,
     CommonStyles.row]}>
-        <Avatar
-            source={Images.img}
-            size={48}
-        />
-        <View style={{ paddingLeft: 10 }}>
-            <Label
-                label={item.userName}
-                style={{ width: wide * 0.4 }}
-                bold
+        <ProfileButton style={[CommonStyles.row]} user={item}>
+            <Avatar
+                source={Images.img}
+                size={48}
             />
-            <Label
-                label={`${item.followedCount} followers`}
-                numberOfLines={1}
-                color={Colors.shade}
-            />
-        </View>
-        <SubmitButtons
+            <View style={{ paddingLeft: 10 }}>
+                <Label
+                    label={item.userName}
+                    style={{ width: wide * 0.4 }}
+                    bold
+                />
+                <Label
+                    label={`${item.followedCount} followers`}
+                    numberOfLines={1}
+                    color={Colors.shade}
+                />
+            </View>
+        </ProfileButton>
+        {!current && <SubmitButtons
             label={!follow ? "Follow" : "Unfollow"}
             dark
             size={14}
             bold
             action={() => { onFollow(!follow), action(!follow, item._id) }}
             style={{ height: 36, width: 110, position: 'absolute', right: 10, borderRadius: 6 }}
-        />
+        />}
     </View>
 }
 
@@ -48,19 +50,17 @@ const SearchUsersWrapper = ({ ...props }) => {
     SearchUsersWrapper.navigationOptions = {
         header: null
     }
-
+    const currentuser = props.user.LoginData._id
     const [users, onSearch] = useState([])
 
     const handleFollow = (status, id) => {
         let obj = {}
-        const { LoginData } = props.user
         if (!status) {
-            obj.following = id;
+            obj.followTo = id;
             obj.active = false
         }
         else {
-            obj.follower = LoginData._id;
-            obj.following = id;
+            obj.followTo = id;
             obj.active = true
         }
         props.dispatch(FollowUser(obj))
@@ -69,6 +69,7 @@ const SearchUsersWrapper = ({ ...props }) => {
     const renderUser = ({ item, index }) => <UserItem
         item={item}
         action={handleFollow}
+        current={item._id == currentuser}
     />
 
     const setInput = (query) => {
@@ -81,7 +82,6 @@ const SearchUsersWrapper = ({ ...props }) => {
             }))
         }
     }
-    console.log(users);
 
     return (
         <SafeAreaView style={[CommonStyles.container, { padding: 0 }]}>

@@ -21,7 +21,11 @@ const reelschema = {
 const profileSchema = {
   userPosts: [],
   userReels: [],
-  userSubscriptions: []
+  userSubscriptions: [],
+  otherSubscriptions: [],
+  bookedSubscriptions: [],
+  sentAppreciation: [],
+  receivedAppreciation: []
 }
 
 const storyschema = {

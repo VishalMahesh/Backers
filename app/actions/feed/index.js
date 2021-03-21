@@ -151,7 +151,6 @@ export function likePosts(id, ind, isLiked, notHome) {
         postId: id
     }
     let url = isLiked ? AppURLs.unlikePosts : AppURLs.likePosts
-
     return (dispatch, getState) => {
         dispatch(likePostRequest())
         return axios.post(url, data).then(res => {
@@ -337,10 +336,10 @@ export function likeComment(id) {
     }
     return (dispatch, getState) => {
         axios.post(AppURLs.likeComment, data).then(res => {
-            debugger
+            //debugger
         })
             .catch(err => {
-                debugger
+                //debugger
                 console.log(err);
             })
     }
@@ -352,10 +351,10 @@ export function unlikeComment(id) {
     }
     return (dispatch, getState) => {
         axios.post(AppURLs.unlikeComment, data).then(res => {
-            debugger
+            //debugger
         })
             .catch(err => {
-                debugger
+                //debugger
                 console.log(err);
             })
     }

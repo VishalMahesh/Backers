@@ -64,7 +64,8 @@ class Details extends React.Component {
         let onScroll = Animated.event([
             { nativeEvent: { contentOffset: { y: this._scrollValue } } },
         ]);
-        const { post } = this.props.navigation.state.params
+        const { post, user } = this.props.navigation.state.params
+        const { LoginData } = this.props.user
         return (
             <SafeAreaView style={[CommonStyles.container, CommonStyles.noPadding]}>
                 <AuthHeader
@@ -85,6 +86,8 @@ class Details extends React.Component {
                         payout={() => this.setState({ pay: true })}
                         share={onShare}
                         nozoom
+                        currentUserPost={user._id == LoginData._id}
+                        user={user}
                         onProfile={() => Navigation.navigate("Profile")}
                         key={item.id}
                         onDetails={() => { }}
@@ -132,6 +135,7 @@ function mapStateToProps(state) {
     return {
         data: entities.reel,
         feed: entities.feed,
+        user: entities.user,
         feedReducer
     }
 }

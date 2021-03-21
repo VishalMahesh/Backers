@@ -58,6 +58,23 @@ class AppUtils {
     return strString + " " + "ago";
   };
 
+  prettierDate(date) {
+    let newTime = new Date(date).toDateString()
+    return newTime
+  }
+
+  prettierTime(t) {
+    var time = new Date(t);
+    var hours = time.getHours();
+    var minutes = time.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+
 }
 
 export default new AppUtils();

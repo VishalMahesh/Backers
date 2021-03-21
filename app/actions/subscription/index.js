@@ -30,7 +30,7 @@ export function updateSubscriptions(id, data, obj, cb) {
     return (dispatch, getState) => {
         dispatch(apiRequest())
         return Axios.put(`${AppURLs.updateSubscription + id}`, newdata).then(res => {
-            debugger
+            //debugger
             if (res.data.status) {
                 cb(true, res.data.success.message)
             }
@@ -74,7 +74,19 @@ export function fetchUserSubscriptions(data) {
         dispatch(apiRequest())
         return Axios.get(AppURLs.fetchUserSubscription + data).then(res => {
             if (res.data.status) {
-                getState().entities.profile.userSubscriptions = res.data.success.data
+                let data = res.data.success.data
+                let arr = [...data]
+                let newArr = []
+                arr.forEach(item => {
+                    let obj = {}
+                    if (item.type !== "free") {
+                        obj.name = item.displayName ? item.displayName : item.type.toUpperCase()
+                        obj.id = item._id
+                        obj.price = item.price
+                        newArr.push(obj)
+                    }
+                })
+                getState().entities.profile.otherSubscriptions = newArr
             }
             dispatch(apiSuccess())
         })
@@ -97,6 +109,63 @@ export function fetchMySubscriptions() {
             dispatch(apiSuccess())
         })
             .catch(err => {
+                console.log(err);
+                dispatch(apiFailure())
+            })
+    }
+}
+
+export function subscribeToPost(data, cb) {
+    return (dispatch, getState) => {
+        dispatch(apiRequest())
+        return Axios.post(AppURLs.bookSubscription, data).then(res => {
+            if (res.data.status) {
+                cb(true)
+            }
+            else {
+                cb(false)
+            }
+            dispatch(apiSuccess())
+        })
+            .catch(err => {
+                console.log(err);
+                cb(false)
+                dispatch(apiFailure())
+            })
+    }
+}
+
+
+export function fetchMyBookedSubscriptions() {
+    return (dispatch, getState) => {
+        dispatch(apiRequest())
+        return Axios.get(AppURLs.fetchbookedSubscription).then(res => {
+            if (res.data.status) {
+                getState().entities.profile.bookedSubscriptions = res.data.success.data
+            }
+            dispatch(apiSuccess())
+        })
+            .catch(err => {
+                console.log(err);
+                dispatch(apiFailure())
+            })
+    }
+}
+
+export function sendAppreciations(data, cb) {
+    return (dispatch, getState) => {
+        dispatch(apiRequest())
+        return Axios.post(AppURLs.sendAppreciation, data).then(res => {
+            if (res.data.status) {
+                cb(true)
+            }
+            else {
+                cb(false)
+            }
+            dispatch(apiSuccess())
+        })
+            .catch(err => {
+                cb(false)
                 console.log(err);
                 dispatch(apiFailure())
             })

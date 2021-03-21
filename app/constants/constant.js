@@ -43,7 +43,12 @@ export const AppURLs = {
   fetchMySubscriptions: "subscriptions/fetchMySubscriptions",
   updateProfile: "users/update",
   myBookedSlots: "slotBookings/myBookedSlots",
-  checkUserNameAvailability: "CheckUserNameAvailability"
+  checkUserNameAvailability: "CheckUserNameAvailability",
+  bookSubscription: "subscriptionbookings/bookSubscription",
+  fetchbookedSubscription: "subscriptionbookings/myBookedSubscriptions",
+  sendAppreciation: "messages/sendDonation",
+  getSentAppreciation: "messages/fetchMySentMessages",
+  getReceivedAppreciation: "messages/fetchMyMessages"
 };
 
 export const USER_AUTH = 'USER_AUTH';

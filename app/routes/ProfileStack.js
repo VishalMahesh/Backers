@@ -24,6 +24,9 @@ const ProfileStack = createStackNavigator(
         AllSetting: {
             getScreen: () => require('../containers/profile/settings').default
         },
+        MyBooking: {
+            getScreen: () => require('../containers/myBookings').default
+        },
         ScheduledCalls: {
             getScreen: () => require('../containers/scheduler/scheduledCalls').default
         },
@@ -38,6 +41,9 @@ const ProfileStack = createStackNavigator(
         },
         TierSettings: {
             getScreen: () => require('../containers/subscriptions/tierSettings').default
+        },
+        ReelVideo: {
+            getScreen: () => require('../containers/reels/item').default
         }
     },
     {
@@ -57,7 +63,8 @@ ProfileStack.navigationOptions = ({ navigation }) => {
         routeName == "Settlements" ||
         routeName == "Payments" ||
         routeName == "EditSubscription" ||
-        routeName == "FreeTier"
+        routeName == "FreeTier" ||
+        routeName == "MyBooking"
     ) {
         tabBarVisible = false;
     }

@@ -39,6 +39,9 @@ const HomeStack = createStackNavigator(
         InfluencerScheduler: {
             getScreen: () => require('../containers/scheduler/influencer').default
         },
+        ReelVideo: {
+            getScreen: () => require('../containers/reels/item').default
+        }
     },
     {
         defaultNavigationOptions,

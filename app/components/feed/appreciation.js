@@ -156,7 +156,7 @@ const Caption = ({ icon, icon1, icon2, value, color }) => <View style={[{ flex: 
     />
 </View>
 
-const Appreciation = ({ onClose }) => {
+const Appreciation = ({ onClose, onSend, ById }) => {
     const [active, onChange] = useState(0)
     const [count, onCount] = useState(1)
     const [inputVal, onChangeInput] = useState("0")
@@ -180,9 +180,18 @@ const Appreciation = ({ onClose }) => {
         }
     }
 
+    const handleSubmit = () => {
+        let obj = {
+            "sendTo": ById,
+            "message": "Test message",
+            "amount": activePrice()
+        }
+        onSend(obj)
+    }
+
     return <ModalBox
         mainLabel={"Send appreciation"}
-        onSubmit={onClose}
+        onSubmit={handleSubmit}
         closeModal={onClose}
         icon={Images.appreciation}
         btnlabel={`Send appreciation for $${activePrice()}`}

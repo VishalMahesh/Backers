@@ -28,6 +28,7 @@ import { Label } from '../../components/common/label'
 import { showConfirmationAlert, showErrorAlert } from '../../utils/info'
 import NoData from '../../components/common/noData'
 import { fetchStories } from '../../actions/story'
+import { sendAppreciations } from '../../actions/subscription'
 type SelectedPhotoType = { photoURI: string; measurement: Measurement };
 
 type State = {
@@ -178,11 +179,35 @@ class Home extends Component {
         }
     }
 
+    handlePay = (e) => {
+        const { LoginData } = this.props.user
+        e.sendFrom = LoginData._id
+        let data = e;
+        this.setState({ pay: false })
+        setTimeout(() => {
+            this.setState({ loading: true }, () => {
+                this.props.dispatch(sendAppreciations(data, res => {
+                    if (res) {
+                        showErrorAlert("Appreciation sent successfully", "Success", () => {
+                            this.setState({ loading: false })
+                        })
+                    }
+                    else {
+                        showErrorAlert("Something went wrong", "Error", () => {
+                            this.setState({ loading: false })
+                        })
+                    }
+                }))
+            })
+        }, 500);
+    }
+
 
     render() {
-        const { comment, option, pay, verifyEmail, story, isDragging, selectedPhoto, activepost, viewPortPostIndex, loading, subscription } = this.state;
+        const { comment, option, pay, verifyEmail, story, isDragging, selectedPhoto, activepost, viewPortPostIndex, loading, subscription, activeuser } = this.state;
         const { feeds, homeFeeds } = this.props.feed
         const { stories } = this.props.story
+        const { LoginData } = this.props.user
         const { isFetching, isRefreshing } = this.props.feedReducer
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light }}>
@@ -209,11 +234,13 @@ class Home extends Component {
                             index={index}
                             shouldPlay={viewPortPostIndex !== index}
                             suggest={Suggestions}
-                            payout={() => this.setState({ pay: true })}
+                            payout={() => this.setState({ pay: true, activeuser: item.users })}
                             share={onShare}
                             onProfile={() => Navigation.navigate("Profile")}
                             key={item.id}
-                            onDetails={() => Navigation.navigate("Details", { post: item })}
+                            user={item.users}
+                            currentUserPost={item.users._id == LoginData._id}
+                            onDetails={() => Navigation.navigate("Details", { post: item, user: item.users })}
                             isDragging={isDragging}
                             comment={() => this.actionComment(true, item._id)}
                             onLike={(type) => this.likeAction(item, type, index)}
@@ -252,9 +279,11 @@ class Home extends Component {
                     action={() => { }}
                     closeStory={() => this.setState({ story: false })}
                     home
+                    ById={activeuser ? activeuser._id : null}
                     activePost={activepost}
                     optiondata={this.getOptions()}
                     action={this.handlePostActions}
+                    submitPay={this.handlePay}
                     subscription={subscription}
                     closeSubscription={() => this.setState({ subscription: false })}
                 />

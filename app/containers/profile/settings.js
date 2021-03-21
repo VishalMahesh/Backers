@@ -26,20 +26,17 @@ export default class AllSettings extends Component {
             Navigation.navigate('InfluencerScheduler')
         }
         else if (ind == 2) {
-            Navigation.navigate('ScheduledCalls')
+            Navigation.navigate('MyBooking')
         }
         else if (ind == 3) {
-            Navigation.navigate('Payments')
-        }
-        else if (ind == 4) {
             Navigation.navigate('Settlements')
         }
-        else if (ind == 5) {
+        else if (ind == 4) {
             const { onEdit } = this.props.navigation.state.params
             onEdit()
             Navigation.back()
         }
-        else if (ind == 6) {
+        else if (ind == 5) {
             this._logout()
         }
     }

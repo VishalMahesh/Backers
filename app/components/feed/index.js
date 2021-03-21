@@ -41,7 +41,6 @@ const IconLabel = ({ label, image }) => <View style={[CommonStyles.row]}>
 
 const PriceInfo = ({ count }) => <View style={[{ height: 30, justifyContent: 'space-between' }, CommonStyles.row]}>
     <IconLabel label={count} image={Images.png} />
-    <IconLabel label={"4"} image={Images.dollar} />
 </View>
 
 const UnlockInfo = ({ count, action }) => <View style={{ flex: 1, padding: containerPadding / 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
@@ -52,13 +51,13 @@ const UnlockInfo = ({ count, action }) => <View style={{ flex: 1, padding: conta
     <View style={[styles.subCont, CommonStyles.rounded]}>
         <PriceInfo count={count} />
         <Label
-            label={"Unlock this post & more such amazing posts from this creator for a month for just $4"}
+            label={"Unlock this post & more such amazing posts from this creator for a month."}
             bold
             style={{ lineHeight: 20, marginVertical: 5 }}
             color={Colors.light}
         />
         <SubmitButtons
-            label={"Subscribe & unlock for $4"}
+            label={"Subscribe & unlock"}
             bold
             style={styles.btn}
             dark
@@ -68,42 +67,45 @@ const UnlockInfo = ({ count, action }) => <View style={{ flex: 1, padding: conta
 </View>
 
 
-const UserProfile = ({ onMore, onProfile, data }) => <View
-    style={[{ height: wide * 0.12, marginBottom: 5 }, CommonStyles.row]}
->
-    <ProfileButton
-        activeOpacity={1}
-        user={(data.users) ? data.users : null}
+const UserProfile = ({ onMore, onProfile, data, user }) => {
+    let newData = data.users ? data.users : user
+    return <View
+        style={[{ height: wide * 0.12, marginBottom: 5 }, CommonStyles.row]}
     >
-        <Image
-            source={data.users.profileImg !== null ? { uri: data.users.profileImg } : Images.img1}
-            style={CommonStyles.avatarsmall}
-        />
-    </ProfileButton>
-    <View style={styles.container}>
         <ProfileButton
             activeOpacity={1}
-            style={{ paddingHorizontal: 10 }}
-            user={(data.users) ? data.users : null}
+            user={newData}
         >
-            <Label
-                label={(data.users) ? data.users.userName : "Test"}
-                color={Colors.dark}
-                style={styles.name}
-            />
-            <Label
-                label={AppUtils.timeDiff(data.createdAt)}
-                color={Colors.shade}
-                style={styles.desc}
+            <Image
+                source={newData.profileImg !== null ? { uri: newData.profileImg } : Images.img1}
+                style={CommonStyles.avatarsmall}
             />
         </ProfileButton>
-        <IconButtons
-            name={Images.more}
-            size={26}
-            action={onMore}
-        />
+        <View style={styles.container}>
+            <ProfileButton
+                activeOpacity={1}
+                style={{ paddingHorizontal: 10 }}
+                user={newData}
+            >
+                <Label
+                    label={newData.userName}
+                    color={Colors.dark}
+                    style={styles.name}
+                />
+                <Label
+                    label={AppUtils.timeDiff(data.createdAt)}
+                    color={Colors.shade}
+                    style={styles.desc}
+                />
+            </ProfileButton>
+            <IconButtons
+                name={Images.more}
+                size={26}
+                action={onMore}
+            />
+        </View>
     </View>
-</View>
+}
 
 const Description = ({ action, value }) => <Label
     label={value}

@@ -16,6 +16,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { connect } from 'react-redux'
 import { setActiveTab, getReels, unLockPost } from '../../actions/reel';
 import onShare from '../../utils/share';
+import AppUtils from '../../utils'
 import NoData from '../../components/common/noData';
 import AppLoader from '../../utils/Apploader';
 import { likePosts } from '../../actions/feed';
@@ -118,11 +119,12 @@ class ReelVideo extends React.Component {
             option: false,
             activepost: null
         }
-
+        this.userType = AppUtils.exists(props.navigation.state.params)
         this.handleViewableItemsChanged = this.handleViewableItemsChanged.bind(this)
         this.viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 }
         this.focusListenerRemover = null;
         this.blurListenerRemover = null;
+        this.userData = this.userType ? props.navigation.state.params.user : null
     }
 
     componentDidMount() {
@@ -158,11 +160,24 @@ class ReelVideo extends React.Component {
         this.setState({ activeVideo: null })
     };
 
+    getDataSet = () => {
+        const { reelVideos } = this.props.data
+        const { userReels } = this.props.profile
+        let data = null
+        if (this.userType) {
+            data = userReels
+        }
+        else {
+            data = reelVideos
+        }
+        return data
+    }
+
     onNavigateIn = (props) => {
         this.props.dispatch(setActiveTab(2))
         this.setState({ activeVideo: 0 })
-        const { reelVideos } = this.props.data
-        if (this.flatlist && reelVideos.length > 0) {
+
+        if (this.flatlist && this.getDataSet().length > 0) {
             this.flatlist.scrollToIndex({ animated: false, index: 0 })
         }
         this.webCall();
@@ -175,8 +190,8 @@ class ReelVideo extends React.Component {
 
     handleEnd = () => {
         const { activeVideo } = this.state;
-        const { reelVideos } = this.props.data
-        if (activeVideo < data.length - 1 && activeVideo && reelVideos.length > 0) {
+
+        if (activeVideo < data.length - 1 && activeVideo && this.getDataSet().length > 0) {
             this.flatlist.scrollToIndex({ animated: true, index: activeVideo + 1 })
         }
         else {
@@ -199,13 +214,13 @@ class ReelVideo extends React.Component {
 
     render() {
         const { activeVideo, comment, pay, option, activepost } = this.state;
-        const { reelVideos } = this.props.data
         const { isFetching } = this.props.reelReducer
-        console.log(reelVideos);
+
+        console.log(this.getDataSet());
         return (
             <View style={{ flex: 1, position: 'relative', backgroundColor: Colors.dark }}>
                 <FlatList
-                    data={reelVideos}
+                    data={this.getDataSet()}
                     pagingEnabled={true}
                     ref={e => this.flatlist = e}
                     showsVerticalScrollIndicator={false}
@@ -215,7 +230,7 @@ class ReelVideo extends React.Component {
                         onpay={() => this.setState({ pay: true })}
                         oncomment={() => this.setState({ comment: true })}
                         onEnd={this.handleEnd}
-                        user={item.users}
+                        user={this.userType ? this.userData : item.users}
                         index={index}
                         item={item}
                         comment={() => this.actionComment(true, item._id)}
@@ -255,6 +270,7 @@ function mapStateToProps(state) {
     const { entities, reelReducer } = state
     return {
         data: entities.reel,
+        profile: entities.profile,
         reelReducer
     }
 }

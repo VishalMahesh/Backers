@@ -805,50 +805,7 @@ export const UserMode = [
     label: "No, I support creators. I AM a backer."
   }
 ]
-export const ProfileSetting = [
-  {
-    id: 0,
-    label: "Switch to edit mode",
-    icon: Images.editpen
-  },
-  {
-    id: 1,
-    label: "View scheduled video calls",
-    icon: Images.clock
-  },
-  // {
 
-  //   id: 2,
-  //   label: "Archive your posts",
-  //   icon: Images.hide
-  // },
-  // {
-  //   id: 3,
-  //   label: "Delete your posts",
-  //   icon: Images.delete
-  // },
-  {
-    id: 4,
-    label: "Manage users",
-    icon: Images.manage
-  },
-  // {
-
-  //   id: 5,
-  //   label: "Lock profile",
-  //   icon: Images.lock
-  // },
-  {
-    id: 6,
-    label: "Copy link to the profile",
-    icon: Images.cpylink
-  }, {
-
-    id: 7,
-    label: "All settings",
-    icon: Images.setting
-  }
-]
 
 export const ProfileAllSetting = [
   // {
@@ -873,13 +830,8 @@ export const ProfileAllSetting = [
   },
   {
     id: 2,
-    label: "View scheduled video calls",
+    label: "My Bookings",
     icon: Images.clock
-  },
-  {
-    id: 3,
-    label: "Payments",
-    icon: Images.dollar
   },
   {
     id: 4,
