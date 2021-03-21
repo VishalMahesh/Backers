@@ -202,7 +202,6 @@ class Home extends Component {
         }, 500);
     }
 
-
     render() {
         const { comment, option, pay, verifyEmail, story, isDragging, selectedPhoto, activepost, viewPortPostIndex, loading, subscription, activeuser } = this.state;
         const { feeds, homeFeeds } = this.props.feed
@@ -272,6 +271,7 @@ class Home extends Component {
                     option={option}
                     closeOption={() => this.setState({ option: false })}
                     pay={pay}
+                    ById={activeuser ? activeuser._id : null}
                     closePay={() => this.setState({ pay: false })}
                     verifyEmail={verifyEmail}
                     closeVerify={() => this.setState({ verifyEmail: false })}
@@ -279,11 +279,10 @@ class Home extends Component {
                     action={() => { }}
                     closeStory={() => this.setState({ story: false })}
                     home
-                    ById={activeuser ? activeuser._id : null}
+                    submitPay={this.handlePay}
                     activePost={activepost}
                     optiondata={this.getOptions()}
                     action={this.handlePostActions}
-                    submitPay={this.handlePay}
                     subscription={subscription}
                     closeSubscription={() => this.setState({ subscription: false })}
                 />

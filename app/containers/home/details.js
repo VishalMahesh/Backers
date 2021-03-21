@@ -65,7 +65,6 @@ class Details extends React.Component {
             { nativeEvent: { contentOffset: { y: this._scrollValue } } },
         ]);
         const { post, user } = this.props.navigation.state.params
-        const { LoginData } = this.props.user
         return (
             <SafeAreaView style={[CommonStyles.container, CommonStyles.noPadding]}>
                 <AuthHeader

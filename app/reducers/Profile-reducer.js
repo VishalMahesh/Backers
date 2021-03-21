@@ -1,7 +1,7 @@
 import {
-    API_REQUEST,
-    API_SUCCESS,
-    API_FAILURE
+    PROFILE_EDIT_REQUEST,
+    PROFILE_EDIT_SUCCESS,
+    PROFILE_EDIT_FAILURE,
 } from '../actions/action-type';
 
 import { Record } from 'immutable';
@@ -17,11 +17,11 @@ const initialState = new InitialState;
 const profileReducer = (state = initialState, action = {}) => {
 
     switch (action.type) {
-        case API_REQUEST:
+        case PROFILE_EDIT_REQUEST:
             return state.setIn(['isFetching'], true).setIn(['error'], null);
-        case API_SUCCESS:
+        case PROFILE_EDIT_SUCCESS:
             return state.setIn(['isFetching'], false).setIn(['error'], null);
-        case API_FAILURE:
+        case PROFILE_EDIT_FAILURE:
             return state.setIn(['isFetching'], false).setIn(['error'], action.error);
         default:
             return state;

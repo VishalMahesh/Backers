@@ -30,7 +30,7 @@ export function updateSubscriptions(id, data, obj, cb) {
     return (dispatch, getState) => {
         dispatch(apiRequest())
         return Axios.put(`${AppURLs.updateSubscription + id}`, newdata).then(res => {
-            //debugger
+            debugger
             if (res.data.status) {
                 cb(true, res.data.success.message)
             }

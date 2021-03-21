@@ -82,6 +82,7 @@ const SearchUsersWrapper = ({ ...props }) => {
             }))
         }
     }
+    console.log(users);
 
     return (
         <SafeAreaView style={[CommonStyles.container, { padding: 0 }]}>

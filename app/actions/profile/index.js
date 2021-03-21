@@ -30,7 +30,7 @@ export function profilePosts(id, cb) {
     return axios
       .get(`${AppURLs.fetchUserPosts}${id}`)
       .then((response) => {
-        //debugger
+        debugger
         if (response.data.status) {
           getState().entities.profile.userPosts = response.data.success.data
           cb(true)
@@ -70,6 +70,7 @@ export function profileReels(id, cb) {
       });
   };
 }
+
 
 
 export function getSentAppreciation(page, cb) {

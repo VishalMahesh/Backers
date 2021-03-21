@@ -169,6 +169,15 @@ const Appreciation = ({ onClose, onSend, ById }) => {
         }
     }
 
+    const handleSubmit = () => {
+        let obj = {
+            "sendTo": ById,
+            "message": "Test message",
+            "amount": activePrice()
+        }
+        onSend(obj)
+    }
+
     const handleInput = (e) => {
         if (e == "") {
             onChangeInput("4")
@@ -178,15 +187,6 @@ const Appreciation = ({ onClose, onSend, ById }) => {
             onChangeInput(e)
             onChange(null)
         }
-    }
-
-    const handleSubmit = () => {
-        let obj = {
-            "sendTo": ById,
-            "message": "Test message",
-            "amount": activePrice()
-        }
-        onSend(obj)
     }
 
     return <ModalBox

@@ -280,13 +280,13 @@ function getBookingFailure(message) {
 
 
 export function addBooking(data, cb) {
-    //debugger
+    debugger
     return (dispatch, getState) => {
         dispatch(getBookingRequest());
         return axios
             .post(AppURLs.bookslot, data)
             .then((response) => {
-                //debugger
+                debugger
                 if (response.data.status) {
                     dispatch(getBookingRequest());
                     cb(true, response.data.success.data)
@@ -307,6 +307,7 @@ export function getMyBookedSlots() {
         return axios
             .get(AppURLs.myBookedSlots)
             .then((response) => {
+                debugger
                 if (response.data.status) {
                     getState().entities.slot.bookedSlots = response.data.success.data
                 }
@@ -314,7 +315,7 @@ export function getMyBookedSlots() {
             })
             .catch((error) => {
                 console.log(error);
-                //debugger
+                debugger
                 return dispatch(getBookingFailure(error));
             });
     }

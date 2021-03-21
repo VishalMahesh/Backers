@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react'
 import { View, FlatList, StatusBar, Platform } from 'react-native'
 import { Layout, Colors, CommonStyles, wide, containerPadding } from '../../constants'

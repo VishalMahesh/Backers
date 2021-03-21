@@ -55,7 +55,7 @@ export function login(credentials, url, cb) {
     return axios
       .post(url, credentials)
       .then((response) => {
-        //debugger
+        debugger
         if (response.data.status) {
           let data = response.data.success.data[0];
           let token = response.data.success.token;
@@ -340,7 +340,7 @@ export function searchUsers(string, cb) {
   return (dispatch, getState) => {
     dispatch(apiRequest())
     return axios.get(`${AppURLs.searchUsers}${string}`).then(res => {
-      //debugger
+      debugger
       if (res.data.status) {
         let data = res.data.success.data
         getState().entities.user.searchedUsers = data
@@ -352,7 +352,7 @@ export function searchUsers(string, cb) {
       dispatch(apiSuccess())
     })
       .catch(err => {
-        //debugger
+        debugger
         console.log(err);
         cb([])
         dispatch(apiFailure())
@@ -361,12 +361,12 @@ export function searchUsers(string, cb) {
 }
 
 export function FollowUser(data) {
-  //debugger
+  debugger
   return (dispatch, getState) => {
     dispatch(apiRequest())
     return axios.post(AppURLs.followUnfollow, data).then(res => {
       if (res.data.status) {
-        //debugger
+        debugger
       }
       dispatch(apiSuccess())
     })
@@ -392,7 +392,7 @@ export function updateProfile(param, isImage, cb) {
     });
   }
   console.log(data);
-  //debugger
+  debugger
   return (dispatch, getState) => {
     dispatch(apiRequest())
     return axios.put(AppURLs.updateProfile, data).then(response => {
@@ -417,13 +417,13 @@ export function updateProfile(param, isImage, cb) {
 }
 
 export function checkUserName(data, cb) {
-  //debugger
+  debugger
   return (dispatch, getState) => {
     dispatch(apiRequest())
     return axios.post(AppURLs.checkUserNameAvailability, data).then(response => {
-      //debugger
+      debugger
       if (response.data.status) {
-        //debugger
+        debugger
         cb(true)
       }
       else {
@@ -432,7 +432,7 @@ export function checkUserName(data, cb) {
       dispatch(apiSuccess())
     })
       .catch(err => {
-        //debugger
+        debugger
         cb(false)
         dispatch(apiFailure())
       })
